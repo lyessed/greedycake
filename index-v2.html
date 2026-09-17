@@ -167,10 +167,7 @@
   footer{border-top:1px solid var(--line);padding:52px 0 40px;color:var(--ink-soft);font-size:.86rem}
   .foot-grid{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
   .foot-brand{max-width:300px}
-  .foot-brand .fmono{width:64px;height:64px;border-radius:50%;border:1.5px solid var(--gold);display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:14px}
-  .foot-brand .fmono .m{font-family:"Cormorant Garamond",serif;font-size:1.35rem;color:var(--ink);display:flex;align-items:center}
-  .foot-brand .fmono .m .a{font-family:"Dancing Script",cursive;color:var(--gold);margin:0 2px}
-  .foot-brand .fmono .u{font-family:"Jost",sans-serif;text-transform:uppercase;letter-spacing:.06em;font-size:.34rem;color:var(--ink-soft);margin-top:2px;white-space:nowrap}
+  .foot-brand .fmono{width:64px;height:64px;border-radius:50%;object-fit:cover;display:block;margin-bottom:14px;border:1px solid color-mix(in srgb,var(--gold) 45%,transparent)}
   .foot-brand .script{font-size:2rem;color:var(--ink)}
   .foot-links{display:flex;gap:50px;flex-wrap:wrap}
   .foot-links h5{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin-bottom:12px;font-weight:500}
@@ -318,7 +315,7 @@
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <div class="fmono"><div class="m">G<span class="a">&amp;</span>E</div><div class="u">Greedy Cake</div></div>
+        <img class="fmono" src="images/logo.png" width="712" height="748" alt="Greedy Cake &amp; Events">
         <div class="script">Greedy Cake &amp; Events</div>
         <p style="margin-top:8px">Pâtisserie sur-mesure &amp; décoration d'événements à Drancy et en Île-de-France.</p>
       </div>
