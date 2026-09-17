@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="description" content="Demande de devis gratuit et sans engagement — Greedy Cake & Events, Drancy (93).">
+<title>Demande de devis — Greedy Cake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Dancing+Script:wght@600;700&family=Jost:wght@300;400;500;600&display=swap">
+
+<style>
+  :root{
+    --ground:#FBF7F1; --surface:#F4ECE1; --surface-2:#EBDFD0; --card:#fff;
+    --ink:#3A2F27; --ink-soft:#6F6053; --line:#E2D6C5; --line-2:#D8C8B2;
+    --gold:#B4842A; --gold-soft:#CBA24A; --choco:#4A3524; --sage:#8A9578;
+    --err:#B4442A; --ok:#5c7a52; --shadow:rgba(58,47,39,.10);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#211913; --surface:#2B2119; --surface-2:#362A20; --card:#2C2219;
+      --ink:#F2E8DB; --ink-soft:#C4B4A2; --line:#3E3128; --line-2:#4a3a2c;
+      --gold:#D8AE52; --gold-soft:#E7C878; --choco:#EDDFCB; --sage:#A6B191;
+      --err:#E08a6f; --ok:#9db892; --shadow:rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:"Jost",system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:38px 20px 70px}
+
+  .head{text-align:center;margin-bottom:26px}
+  .head .brand{font-family:"Dancing Script",cursive;font-weight:700;font-size:2rem;color:var(--ink)}
+  .head h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:clamp(1.7rem,4vw,2.3rem);margin-top:6px;text-wrap:balance}
+  .head p{color:var(--ink-soft);margin-top:6px;font-size:.94rem}
+
+  /* Progress */
+  .prog{display:flex;gap:8px;margin:24px 0 30px}
+  .prog .seg{flex:1;height:5px;border-radius:99px;background:var(--line);overflow:hidden}
+  .prog .seg i{display:block;height:100%;width:0;background:var(--gold);transition:width .4s ease}
+  .prog .seg.done i{width:100%}
+  .prog .seg.cur i{width:50%}
+  .steplabel{text-align:center;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:24px}
+
+  form{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 20px 50px var(--shadow)}
+  @media(max-width:520px){form{padding:22px 18px}}
+
+  .step{display:none;animation:fade .45s ease}
+  .step.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .step > h2{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:1.5rem;margin-bottom:4px}
+  .step > .hint{color:var(--ink-soft);font-size:.9rem;margin-bottom:22px}
+
+  .field{margin-bottom:22px}
+  .field > label.lbl{display:block;font-weight:500;font-size:.92rem;margin-bottom:9px}
+  .field .opt{color:var(--ink-soft);font-weight:400;font-size:.82rem}
+  input[type=text],input[type=tel],input[type=email],input[type=date],select,textarea{
+    width:100%;font-family:inherit;font-size:.95rem;color:var(--ink);background:var(--ground);
+    border:1px solid var(--line-2);border-radius:12px;padding:13px 14px;transition:border-color .2s,box-shadow .2s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 20%,transparent)}
+  textarea{min-height:90px;resize:vertical}
+
+  /* Cartes sélectionnables */
+  .grid{display:grid;gap:12px}
+  .g2{grid-template-columns:1fr 1fr}
+  @media(max-width:520px){.g2{grid-template-columns:1fr}}
+  .pick{position:relative;display:flex;align-items:flex-start;gap:12px;border:1.5px solid var(--line-2);border-radius:14px;padding:14px 15px;cursor:pointer;background:var(--ground);transition:border-color .18s,background .18s,transform .1s}
+  .pick:hover{border-color:var(--gold-soft)}
+  .pick:active{transform:scale(.99)}
+  .pick.sel{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 9%,var(--ground))}
+  .pick .mk{flex:none;width:22px;height:22px;border-radius:7px;border:1.5px solid var(--line-2);display:grid;place-items:center;margin-top:1px;transition:.18s}
+  .pick.radio .mk{border-radius:50%}
+  .pick.sel .mk{border-color:var(--gold);background:var(--gold)}
+  .pick .mk svg{width:13px;height:13px;stroke:#fff;stroke-width:3;fill:none;opacity:0;transition:.18s}
+  .pick.sel .mk svg{opacity:1}
+  .pick .tx b{display:block;font-weight:500;font-size:.95rem}
+  .pick .tx span{display:block;color:var(--ink-soft);font-size:.82rem;margin-top:2px}
+
+  /* Chips */
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{border:1.5px solid var(--line-2);border-radius:99px;padding:9px 15px;font-size:.86rem;cursor:pointer;background:var(--ground);transition:.18s;user-select:none}
+  .chip:hover{border-color:var(--gold-soft)}
+  .chip.sel{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 12%,var(--ground));color:var(--choco);font-weight:500}
+
+  .cond{margin-top:4px;padding:18px;border:1px dashed var(--line-2);border-radius:14px;background:color-mix(in srgb,var(--surface) 60%,transparent);margin-bottom:18px}
+  .cond h4{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:1.15rem;margin-bottom:14px;color:var(--choco)}
+  .cond .field:last-child{margin-bottom:0}
+
+  .upload{display:flex;align-items:center;gap:12px;border:1.5px dashed var(--line-2);border-radius:12px;padding:14px;cursor:pointer;background:var(--ground);transition:.18s}
+  .upload:hover{border-color:var(--gold-soft)}
+  .upload svg{width:22px;height:22px;stroke:var(--gold);fill:none;stroke-width:1.6;flex:none}
+  .upload .u-tx{font-size:.9rem}.upload .u-tx span{display:block;color:var(--ink-soft);font-size:.78rem}
+  input[type=file]{display:none}
+
+  .consent{display:flex;gap:11px;align-items:flex-start;font-size:.86rem;color:var(--ink-soft)}
+  .consent input{margin-top:3px;width:18px;height:18px;accent-color:var(--gold);flex:none}
+  .consent a{color:var(--gold)}
+
+  .err-msg{color:var(--err);font-size:.8rem;margin-top:7px;display:none}
+  .field.invalid .err-msg{display:block}
+  .field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--err)}
+  .shake{animation:shake .4s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden}
+
+  .nav{display:flex;justify-content:space-between;gap:12px;margin-top:28px}
+  .btn{font-family:inherit;font-weight:500;font-size:.92rem;letter-spacing:.02em;padding:14px 26px;border-radius:99px;cursor:pointer;border:1px solid transparent;transition:transform .15s,background .2s,box-shadow .2s;display:inline-flex;align-items:center;gap:.5em}
+  .btn-primary{background:var(--ink);color:var(--ground);margin-left:auto}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 22px var(--shadow)}
+  .btn-ghost{background:none;border-color:var(--line-2);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .btn[disabled]{opacity:.6;cursor:not-allowed;transform:none}
+  .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:none}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .loading .spin{display:inline-block}
+
+  /* Succès */
+  .success{display:none;text-align:center;padding:26px 10px}
+  .success.show{display:block;animation:fade .5s ease}
+  .success .ic{width:78px;height:78px;border-radius:50%;background:color-mix(in srgb,var(--gold) 16%,var(--ground));display:grid;place-items:center;margin:0 auto 18px}
+  .success .ic svg{width:38px;height:38px;stroke:var(--gold);fill:none;stroke-width:2.2}
+  .success h2{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:1.9rem}
+  .success p{color:var(--ink-soft);max-width:44ch;margin:12px auto 0}
+  .success .sig{font-family:"Dancing Script",cursive;font-weight:700;font-size:1.7rem;color:var(--gold);margin-top:20px}
+
+  .footnote{text-align:center;color:var(--ink-soft);font-size:.76rem;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="brand">Greedy Cake &amp; Events</div>
+    <h1>Demande de devis sur-mesure</h1>
+    <p>Quelques questions pour préparer votre projet. Réponse rapide &amp; personnalisée.</p>
+  </div>
+
+  <div class="prog" id="prog">
+    <div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div>
+  </div>
+  <div class="steplabel" id="steplabel">Étape 1 sur 4 — Votre événement</div>
+
+  <form id="form" novalidate>
+    <!-- pot de miel anti-spam -->
+    <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+    <!-- ÉTAPE 1 -->
+    <div class="step active" data-step="1">
+      <h2>Votre événement</h2>
+      <p class="hint">Le contexte, pour vérifier nos disponibilités.</p>
+
+      <div class="field" data-req="date">
+        <label class="lbl" for="date">Date de l'événement</label>
+        <input type="date" id="date" name="date">
+        <div class="err-msg">Merci d'indiquer une date (au moins une semaine à l'avance).</div>
+      </div>
+
+      <div class="field" data-req="type">
+        <label class="lbl">Type d'événement</label>
+        <div class="grid g2" id="typeGrid"></div>
+        <div class="err-msg">Choisissez un type d'événement.</div>
+      </div>
+
+      <div class="field" data-req="reception">
+        <label class="lbl">Mode de réception</label>
+        <div class="grid g2" id="recGrid"></div>
+        <div class="err-msg">Choisissez le retrait ou la livraison.</div>
+      </div>
+
+      <div class="field" id="cpField" style="display:none" data-req="cp">
+        <label class="lbl" for="cp">Code postal / Ville de livraison <span class="opt">(Île-de-France, +20 €)</span></label>
+        <input type="text" id="cp" name="cp" placeholder="Ex : 93700 Drancy">
+        <div class="err-msg">Indiquez le code postal ou la ville de livraison.</div>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 2 -->
+    <div class="step" data-step="2">
+      <h2>Vos prestations</h2>
+      <p class="hint">Sélectionnez tout ce qui vous intéresse (plusieurs choix possibles).</p>
+      <div class="field" data-req="prestations">
+        <div class="grid" id="prestaGrid"></div>
+        <div class="err-msg">Sélectionnez au moins une prestation.</div>
+      </div>
+    </div>
+
+    <!-- ÉTAPE 3 -->
+    <div class="step" data-step="3">
+      <h2>Personnalisation</h2>
+      <p class="hint">On affine selon vos choix.</p>
+      <div id="condHost"></div>
+
+      <div class="field">
+        <label class="lbl">Photo d'inspiration <span class="opt">(facultatif — thème, Pinterest…)</span></label>
+        <label class="upload" for="file">
+          <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L8 8m4-4l4 4"/><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+          <div class="u-tx" id="fileTx">Ajouter une photo<span>JPG ou PNG, une seule image</span></div>
+        </label>
+        <input type="file" id="file" name="file" accept="image/*">
+      </div>
+
+      <div class="field">
+        <label class="lbl">Régime particulier ou allergies <span class="opt">(facultatif)</span></label>
+        <div class="chips" id="regimeChips"></div>
+        <input type="text" id="allergies" name="allergies" placeholder="Autre précision (sans fruits à coque, etc.)" style="margin-top:11px">
+      </div>
+    </div>
+
+    <!-- ÉTAPE 4 -->
+    <div class="step" data-step="4">
+      <h2>Vos coordonnées</h2>
+      <p class="hint">Pour vous envoyer votre devis personnalisé.</p>
+      <div class="grid g2">
+        <div class="field" data-req="prenom">
+          <label class="lbl" for="prenom">Prénom</label>
+          <input type="text" id="prenom" name="prenom" autocomplete="given-name">
+          <div class="err-msg">Votre prénom, s'il vous plaît.</div>
+        </div>
+        <div class="field" data-req="nom">
+          <label class="lbl" for="nom">Nom</label>
+          <input type="text" id="nom" name="nom" autocomplete="family-name">
+          <div class="err-msg">Votre nom, s'il vous plaît.</div>
+        </div>
+      </div>
+      <div class="field" data-req="tel">
+        <label class="lbl" for="tel">Téléphone</label>
+        <input type="tel" id="tel" name="tel" autocomplete="tel" placeholder="06 12 34 56 78">
+        <div class="err-msg">Numéro de téléphone français non valide.</div>
+      </div>
+      <div class="field" data-req="email">
+        <label class="lbl" for="email">Adresse e-mail</label>
+        <input type="email" id="email" name="email" autocomplete="email" placeholder="prenom@email.com">
+        <div class="err-msg">Adresse e-mail non valide.</div>
+      </div>
+      <div class="field">
+        <label class="lbl" for="remarques">Remarques complémentaires <span class="opt">(facultatif)</span></label>
+        <textarea id="remarques" name="remarques" placeholder="Un thème, des couleurs, une idée en tête…"></textarea>
+      </div>
+      <div class="field" data-req="consent">
+        <label class="consent"><input type="checkbox" id="consent">
+          <span>J'accepte que mes informations soient utilisées pour traiter ma demande de devis, conformément à la <a href="mentions-legales.html" target="_blank" rel="noopener">politique de confidentialité</a>.</span></label>
+        <div class="err-msg">Merci de cocher cette case pour continuer.</div>
+      </div>
+    </div>
+
+    <div class="nav" id="nav">
+      <button type="button" class="btn btn-ghost" id="prev" style="visibility:hidden">Retour</button>
+      <button type="button" class="btn btn-primary" id="next">Continuer</button>
+      <button type="button" class="btn btn-primary" id="submit" style="display:none"><span class="spin"></span><span class="submit-tx">Envoyer ma demande</span></button>
+    </div>
+  </form>
+
+  <!-- SUCCÈS -->
+  <div class="success" id="success">
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <h2>Merci, c'est bien reçu !</h2>
+    <p>Votre demande est arrivée. On revient vers vous très vite avec une proposition personnalisée — en général sous 48 h. À très vite pour créer quelque chose de gourmand ✨</p>
+    <div class="sig">Greedy Cake &amp; Events</div>
+  </div>
+
+  <div class="footnote">Devis gratuit &amp; sans engagement · Greedy Cake &amp; Events — Drancy (93)</div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — webhook N8N (production).
+   Laisser vide ("") pour tester : l'envoi est alors simulé.
+   TODO : coller l'URL de production du webhook n8n ci-dessous.
+   ============================================================ */
+var WEBHOOK_URL = ""; // ex : "https://n8n.tondomaine.fr/webhook/devis-greedy-cake"
+var FORM_VERSION = "1.0";
+
+/* ---------- Données (à ajuster librement) ---------- */
+var EVENTS = [
+  {k:"anniversaire", label:"Anniversaire"},
+  {k:"baby_shower", label:"Baby shower / Gender reveal"},
+  {k:"mariage", label:"Mariage / Fiançailles"},
+  {k:"bapteme", label:"Baptème / Communion"},
+  {k:"autre", label:"Autre"}
+];
+var RECEPTIONS = [
+  {k:"retrait", title:"Retrait à l'atelier", sub:"À Drancy (93) — gratuit"},
+  {k:"livraison", title:"Livraison", sub:"Île-de-France — +20 €"}
+];
+var PRESTATIONS = [
+  {k:"gateaux", cat:"gateau", title:"Gâteaux d'exception", sub:"Layer cake, number/letter cake, gâteau à thème, pièce montée"},
+  {k:"number", cat:"gateau", title:"Number / Letter cake", sub:"Un chiffre ou une initiale garnie"},
+  {k:"gourmandises", cat:"gourmandise", title:"Gourmandises individuelles", sub:"Cupcakes, bento cakes, mignardises"},
+  {k:"buffet", cat:"buffet", title:"Fraîcheur & buffets", sub:"Plateaux de fruits, sweet table"},
+  {k:"deco", cat:"deco", title:"Décoration & souvenirs", sub:"Bouquet de cupcakes, dragées & étiquettes perso"}
+];
+var PARTS = ["10–15","15–20","20–30","30 et +"];
+var SAVEURS = ["Ganache fraise","Ganache framboise","Ganache chocolat Nutella","Ganache noix de coco (Raffaello)","Ganache mangue"];
+var CUPCAKES = ["Nutella","Caramel beurre salé","Noix de coco","Fraises","Speculoos"];
+var QTES = ["Boîte de 6","Boîte de 12","Boîte de 24","Format buffet"];
+var REGIMES = ["Halal","Sans porc / sans alcool","Sans gluten"];
+
+/* ---------- État ---------- */
+var state = {
+  date:"", type:"", reception:"", cp:"",
+  prestations:[], parts:"", saveurs:[], inscription:"", quantite:"", perso:"",
+  regimes:[], allergies:"", cupcakes:[], file:null
+};
+var cur = 1, TOTAL = 4;
+var $ = function(s,c){return (c||document).querySelector(s)};
+var $$ = function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+var CHK = '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>';
+
+/* ---------- Construction des options ---------- */
+function pickCard(k,title,sub,radio){
+  return '<div class="pick'+(radio?' radio':'')+'" data-k="'+k+'"><span class="mk">'+CHK+'</span>'+
+         '<span class="tx"><b>'+title+'</b>'+(sub?'<span>'+sub+'</span>':'')+'</span></div>';
+}
+$("#typeGrid").innerHTML = EVENTS.map(function(e){return pickCard(e.k,e.label,"",true)}).join("");
+$("#recGrid").innerHTML = RECEPTIONS.map(function(r){return pickCard(r.k,r.title,r.sub,true)}).join("");
+$("#prestaGrid").innerHTML = PRESTATIONS.map(function(p){return pickCard(p.k,p.title,p.sub,false)}).join("");
+$("#regimeChips").innerHTML = REGIMES.map(function(r){return '<div class="chip" data-v="'+r+'">'+r+'</div>'}).join("");
+
+/* date mini = aujourd'hui + 7 jours */
+(function(){
+  var d=new Date(); d.setDate(d.getDate()+7);
+  $("#date").min = d.toISOString().split("T")[0];
+})();
+
+/* ---------- Sélections ---------- */
+// type d'événement (radio)
+$$("#typeGrid .pick").forEach(function(el){el.onclick=function(){
+  $$("#typeGrid .pick").forEach(function(x){x.classList.remove("sel")});
+  el.classList.add("sel"); state.type=el.dataset.k; clearErr(el.closest(".field"));
+}});
+// réception (radio) + champ CP conditionnel
+$$("#recGrid .pick").forEach(function(el){el.onclick=function(){
+  $$("#recGrid .pick").forEach(function(x){x.classList.remove("sel")});
+  el.classList.add("sel"); state.reception=el.dataset.k; clearErr(el.closest(".field"));
+  $("#cpField").style.display = state.reception==="livraison" ? "block":"none";
+}});
+// prestations (multi)
+$$("#prestaGrid .pick").forEach(function(el){el.onclick=function(){
+  el.classList.toggle("sel");
+  var k=el.dataset.k, i=state.prestations.indexOf(k);
+  if(i>-1)state.prestations.splice(i,1); else state.prestations.push(k);
+  clearErr(el.closest(".field"));
+}});
+// régimes (chips)
+$$("#regimeChips .chip").forEach(function(el){el.onclick=function(){
+  el.classList.toggle("sel");
+  var v=el.dataset.v, i=state.regimes.indexOf(v);
+  if(i>-1)state.regimes.splice(i,1); else state.regimes.push(v);
+}});
+// upload
+$("#file").onchange=function(){
+  var f=this.files[0];
+  if(f){ state.file=f.name; $("#fileTx").innerHTML=f.name+'<span>Cliquez pour changer</span>'; }
+};
+
+/* ---------- Étape 3 : blocs conditionnels ---------- */
+function has(cat){ return state.prestations.some(function(k){
+  var p=PRESTATIONS.filter(function(x){return x.k===k})[0]; return p && p.cat===cat; }); }
+function hasNumber(){ return state.prestations.indexOf("number")>-1; }
+
+function buildStep3(){
+  var h="";
+  if(has("gateau")){
+    h+='<div class="cond"><h4>Votre gâteau</h4>';
+    h+='<div class="field"><label class="lbl">Nombre de parts</label><div class="chips" id="partsChips">'+
+       PARTS.map(function(p){return '<div class="chip" data-v="'+p+'">'+p+'</div>'}).join("")+'</div></div>';
+    h+='<div class="field"><label class="lbl">Saveurs souhaitées <span class="opt">(plusieurs possibles)</span></label><div class="chips" id="savChips">'+
+       SAVEURS.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
+    if(hasNumber()){
+      h+='<div class="field"><label class="lbl" for="inscr">Chiffre(s) ou lettre(s) souhaité(s)</label><input type="text" id="inscr" placeholder="Ex : 30, ou les initiales A & M"></div>';
+    }
+    h+='</div>';
+  }
+  if(has("gourmandise")||has("buffet")){
+    h+='<div class="cond"><h4>Gourmandises / buffet</h4>';
+    if(has("gourmandise")){
+      h+='<div class="field"><label class="lbl">Parfums des cupcakes <span class="opt">(fourrés, 4 € l\'unité — plusieurs possibles)</span></label><div class="chips" id="cupChips">'+
+         CUPCAKES.map(function(c){return '<div class="chip" data-v="'+c+'">'+c+'</div>'}).join("")+'</div></div>';
+    }
+    h+='<div class="field"><label class="lbl">Quantité estimée</label><div class="chips" id="qteChips">'+
+       QTES.map(function(q){return '<div class="chip" data-v="'+q+'">'+q+'</div>'}).join("")+'</div></div></div>';
+  }
+  if(has("deco")){
+    h+='<div class="cond"><h4>Décoration & souvenirs</h4>'+
+       '<div class="field"><label class="lbl" for="persoTxt">Texte de personnalisation <span class="opt">(prénom, date, petit message…)</span></label>'+
+       '<input type="text" id="persoTxt" placeholder="Ex : Bienvenue bébé Lina — 12 juin"></div></div>';
+  }
+  if(!h){ h='<p class="hint" style="margin-bottom:0">Rien à personnaliser ici — passez à la suite 🙂</p>'; }
+  $("#condHost").innerHTML=h;
+
+  // brancher les chips dynamiques
+  bindChips("#partsChips", function(v,multi){ state.parts=v; }, false);
+  bindChips("#savChips", null, true, "saveurs");
+  bindChips("#qteChips", function(v){ state.quantite=v; }, false);
+  bindChips("#cupChips", null, true, "cupcakes");
+  var ins=$("#inscr"); if(ins) ins.oninput=function(){state.inscription=this.value};
+  var pt=$("#persoTxt"); if(pt) pt.oninput=function(){state.perso=this.value};
+}
+function bindChips(sel, single, multi, key){
+  var host=$(sel); if(!host)return;
+  $$(".chip",host).forEach(function(el){
+    // pré-sélection si déjà en state
+    if(multi && state[key].indexOf(el.dataset.v)>-1) el.classList.add("sel");
+    if(single && state.parts===el.dataset.v) el.classList.add("sel");
+    el.onclick=function(){
+      if(multi){
+        el.classList.toggle("sel");
+        var v=el.dataset.v,i=state[key].indexOf(v);
+        if(i>-1)state[key].splice(i,1); else state[key].push(v);
+      } else {
+        $$(".chip",host).forEach(function(x){x.classList.remove("sel")});
+        el.classList.add("sel"); if(single) single(el.dataset.v);
+      }
+    };
+  });
+}
+
+/* ---------- Validation ---------- */
+var reFR = /^(?:(?:\+|00)33[\s.-]?|0)[1-9](?:[\s.-]?\d{2}){4}$/;
+var reMail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function clearErr(f){ if(f) f.classList.remove("invalid"); }
+function setErr(f){ if(f){ f.classList.add("invalid"); f.classList.add("shake"); setTimeout(function(){f.classList.remove("shake")},400);} }
+
+function validateStep(n){
+  var ok=true, first=null;
+  var stepEl=$('.step[data-step="'+n+'"]');
+  $$(".field[data-req]",stepEl).forEach(function(f){
+    if(f.offsetParent===null){return;} // champ masqué (ex : CP) -> ignoré
+    var req=f.dataset.req, valid=true;
+    if(req==="date"){ valid = !!$("#date").value && $("#date").value >= $("#date").min; }
+    else if(req==="type"){ valid = !!state.type; }
+    else if(req==="reception"){ valid = !!state.reception; }
+    else if(req==="cp"){ valid = $("#cp").value.trim().length>1; }
+    else if(req==="prestations"){ valid = state.prestations.length>0; }
+    else if(req==="prenom"){ valid = $("#prenom").value.trim().length>0; }
+    else if(req==="nom"){ valid = $("#nom").value.trim().length>0; }
+    else if(req==="tel"){ valid = reFR.test($("#tel").value.trim()); }
+    else if(req==="email"){ valid = reMail.test($("#email").value.trim()); }
+    else if(req==="consent"){ valid = $("#consent").checked; }
+    if(valid){ clearErr(f); } else { setErr(f); if(!first)first=f; ok=false; }
+  });
+  if(first) first.scrollIntoView({behavior:"smooth",block:"center"});
+  return ok;
+}
+// nettoyer l'erreur en direct
+["date","cp","prenom","nom","tel","email"].forEach(function(id){
+  var el=$("#"+id); if(el) el.addEventListener("input",function(){clearErr(el.closest(".field"))});
+});
+$("#consent").addEventListener("change",function(){clearErr(this.closest(".field"))});
+
+/* ---------- Navigation ---------- */
+function render(){
+  $$(".step").forEach(function(s){s.classList.toggle("active", +s.dataset.step===cur)});
+  $$("#prog .seg").forEach(function(seg,i){
+    seg.classList.remove("done","cur");
+    if(i<cur-1)seg.classList.add("done"); else if(i===cur-1)seg.classList.add("cur");
+  });
+  var labels=["Votre événement","Vos prestations","Personnalisation","Vos coordonnées"];
+  $("#steplabel").textContent="Étape "+cur+" sur "+TOTAL+" — "+labels[cur-1];
+  $("#prev").style.visibility = cur===1 ? "hidden":"visible";
+  $("#next").style.display = cur<TOTAL ? "inline-flex":"none";
+  $("#submit").style.display = cur===TOTAL ? "inline-flex":"none";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$("#next").onclick=function(){
+  if(!validateStep(cur))return;
+  if(cur===2) buildStep3();
+  cur++; render();
+};
+$("#prev").onclick=function(){ if(cur>1){cur--; render();} };
+
+/* ---------- Payload + envoi ---------- */
+function buildPayload(){
+  return {
+    meta:{ source:"site-greedy-cake", form_version:FORM_VERSION, submitted_at:new Date().toISOString() },
+    evenement:{ date:state.date||$("#date").value, type:state.type,
+      reception:{ mode:state.reception, zone: state.reception==="livraison"?"Île-de-France (+20€)":null, code_postal: state.reception==="livraison"?$("#cp").value.trim():null } },
+    prestations: state.prestations,
+    details:{
+      gateau:{ parts:state.parts||null, saveurs:state.saveurs, inscription:state.inscription||null },
+      gourmandises:{ quantite:state.quantite||null, parfums_cupcakes:state.cupcakes },
+      decoration:{ personnalisation:state.perso||null }
+    },
+    contraintes:{ regimes:state.regimes, allergies:$("#allergies").value.trim()||null },
+    inspiration:{ fichier:state.file||null },
+    contact:{ prenom:$("#prenom").value.trim(), nom:$("#nom").value.trim(),
+      telephone:$("#tel").value.trim(), email:$("#email").value.trim(), remarques:$("#remarques").value.trim()||null },
+    consentement_rgpd:$("#consent").checked
+  };
+}
+$("#submit").onclick=function(){
+  if($('input[name="website"]').value){ return; } // honeypot rempli = bot -> on ignore
+  if(!validateStep(4))return;
+  var btn=this; btn.classList.add("loading"); btn.disabled=true;
+  $(".submit-tx",btn).textContent="Envoi…";
+  var payload=buildPayload();
+  console.log("Payload devis →", JSON.stringify(payload,null,2));
+
+  function done(){ $("#form").style.display="none"; $("#prog").style.display="none";
+    $("#steplabel").style.display="none"; $("#success").classList.add("show");
+    window.scrollTo({top:0,behavior:"smooth"}); }
+  function fail(){ btn.classList.remove("loading"); btn.disabled=false;
+    $(".submit-tx",btn).textContent="Réessayer l'envoi"; alert("Oups, l'envoi a échoué. Réessayez ou contactez-nous directement."); }
+
+  if(!WEBHOOK_URL){ setTimeout(done,1100); return; } // mode démo
+  fetch(WEBHOOK_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+    .then(function(r){ if(!r.ok)throw 0; done(); }).catch(fail);
+};
+
+render();
+</script>
+</body>
+</html>
