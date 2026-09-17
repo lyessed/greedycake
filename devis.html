@@ -30,7 +30,8 @@
   .wrap{max-width:760px;margin:0 auto;padding:38px 20px 70px}
 
   .head{text-align:center;margin-bottom:26px}
-  .head .brand{font-family:"Dancing Script",cursive;font-weight:700;font-size:2rem;color:var(--ink)}
+  .head .brand{font-family:"Dancing Script",cursive;font-weight:700;font-size:2rem;color:var(--ink);text-decoration:none;display:inline-block;transition:color .18s}
+  .head .brand:hover{color:var(--gold)}
   .head h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:clamp(1.7rem,4vw,2.3rem);margin-top:6px;text-wrap:balance}
   .head p{color:var(--ink-soft);margin-top:6px;font-size:.94rem}
 
@@ -125,12 +126,13 @@
   .success .sig{font-family:"Dancing Script",cursive;font-weight:700;font-size:1.7rem;color:var(--gold);margin-top:20px}
 
   .footnote{text-align:center;color:var(--ink-soft);font-size:.76rem;margin-top:20px}
+  .footnote a{color:var(--gold)}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="head">
-    <div class="brand">Greedy Cake &amp; Events</div>
+    <a class="brand" href="index.html">Greedy Cake &amp; Events</a>
     <h1>Demande de devis sur-mesure</h1>
     <p>Quelques questions pour préparer votre projet. Réponse rapide &amp; personnalisée.</p>
   </div>
@@ -258,7 +260,7 @@
     <div class="sig">Greedy Cake &amp; Events</div>
   </div>
 
-  <div class="footnote">Devis gratuit &amp; sans engagement · Greedy Cake &amp; Events — Drancy (93)</div>
+  <div class="footnote"><a href="index.html">&larr; Retour à l'accueil</a> · Devis gratuit &amp; sans engagement · Drancy (93) · <a href="https://www.instagram.com/greedy.cake_events/" target="_blank" rel="noopener">Instagram</a></div>
 </div>
 
 <script>
