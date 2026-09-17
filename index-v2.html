@@ -61,6 +61,10 @@
   .v2-header .nav-links a:hover{color:var(--gold-soft)}
   .v2-outline{border-color:rgba(231,200,120,.5);color:#F7EFE2}
   .v2-outline:hover{background:rgba(255,255,255,.08);border-color:var(--gold-soft);transform:translateY(-1px)}
+  .v2-iconbtn{background:none;border:1px solid rgba(231,200,120,.5);border-radius:999px;width:36px;height:36px;display:grid;place-items:center;color:#F7EFE2;transition:.2s}
+  .v2-iconbtn:hover{border-color:var(--gold-soft);color:var(--gold-soft)}
+  .v2-iconbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6}
+  .v2-header .nav-right{display:flex;align-items:center;gap:14px}
   @media(max-width:860px){.v2-header .nav-links{display:none}}
   @media(max-width:480px){
     .v2-header .nav{height:68px}
@@ -194,7 +198,10 @@
       <a href="#evenements">Événements</a>
       <a href="#savoir">Savoir-faire</a>
     </nav>
-    <a href="devis.html" class="btn v2-outline">Demander un devis</a>
+    <div class="nav-right">
+      <a class="v2-iconbtn" href="https://www.instagram.com/greedy.cake_events/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+      <a href="devis.html" class="btn v2-outline">Demander un devis</a>
+    </div>
   </div>
 </header>
 

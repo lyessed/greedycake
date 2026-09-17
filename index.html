@@ -50,46 +50,55 @@
   header{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--ground) 82%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent);opacity:0;animation:fadeHdr .8s 1.4s ease forwards}
   @keyframes fadeHdr{to{opacity:1}}
   .nav{display:flex;align-items:center;justify-content:space-between;height:74px}
-  .brand{display:flex;align-items:center;gap:12px}
-  .brand .mono{width:34px;height:34px;border-radius:50%;border:1.4px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-size:1rem;color:var(--ink);flex:none}
-  .brand .mono .a{font-family:"Dancing Script",cursive;color:var(--gold);margin:0 1px}
-  .brand .nm{font-family:"Dancing Script",cursive;font-weight:700;font-size:1.6rem;line-height:1;color:var(--ink);white-space:nowrap}
+  .brand{display:flex;align-items:center}
+  .brand-logo{height:56px;width:56px;border-radius:50%;object-fit:cover;display:block;border:1px solid color-mix(in srgb,var(--gold) 45%,transparent)}
   .nav-links{display:flex;gap:30px;font-size:.82rem;letter-spacing:.06em;color:var(--ink-soft)}
   .nav-links a{position:relative;padding:4px 0}
   .nav-links a:hover{color:var(--ink)}
   .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--gold);transition:width .25s}
   .nav-links a:hover::after{width:100%}
   .nav-right{display:flex;align-items:center;gap:16px}
-  .themebtn{background:none;border:1px solid var(--line);border-radius:999px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer;color:var(--ink-soft)}
-  .themebtn:hover{border-color:var(--gold);color:var(--gold)}
+  .themebtn,.iconbtn{background:none;border:1px solid var(--line);border-radius:999px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer;color:var(--ink-soft)}
+  .themebtn:hover,.iconbtn:hover{border-color:var(--gold);color:var(--gold)}
+  .iconbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6}
   @media(max-width:860px){.nav-links{display:none}}
   @media(max-width:480px){
     .wrap{padding:0 16px}
-    .brand .nm{font-size:1.2rem}
+    .brand-logo{height:42px;width:42px}
     .nav-right{gap:8px}
     .nav-right .btn{padding:.65em 1em;font-size:.76rem}
   }
 
   /* ===== HERO — logo couronne ===== */
-  .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:90px 24px 70px;background:var(--taupe)}
-  .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:22%;z-index:2;pointer-events:none;background:linear-gradient(180deg,transparent,var(--ground))}
-  #petals{position:absolute;inset:0;z-index:1;pointer-events:none}
-  .hero-glow{position:absolute;z-index:0;left:50%;top:44%;width:min(78vw,720px);height:min(78vw,720px);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,248,235,.35),transparent 62%);filter:blur(8px)}
-  .hero-inner{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center}
-  .hero-logo{width:clamp(290px,54vh,560px);max-width:92vw;height:auto;display:block;
-    opacity:0;transform:scale(.92) translateY(10px);animation:logoIn 1.5s .25s cubic-bezier(.2,.75,.15,1) forwards;
-    filter:drop-shadow(0 18px 40px rgba(58,40,22,.28))}
-  @keyframes logoIn{to{opacity:1;transform:none}}
-  .hero-line{margin-top:6px;font-family:"Cormorant Garamond",serif;font-style:italic;font-size:clamp(1.15rem,2.4vw,1.6rem);color:#3d2f22;opacity:0;animation:rise .9s 1.15s both}
-  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:24px;opacity:0;animation:rise .8s 1.35s both}
-  .hero .btn-primary{background:#3A2B1E;color:#F6EEE2}
-  .hero .btn-primary:hover{background:#4a3826}
-  .hero .btn-ghost{border-color:rgba(58,40,22,.4);color:#3A2B1E}
-  .hero .btn-ghost:hover{border-color:#3A2B1E;background:rgba(255,255,255,.18)}
-  .hero-loc{margin-top:24px;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:#5b4a38;opacity:0;animation:rise .8s 1.5s both}
+  .hero{position:relative;min-height:92vh;display:flex;align-items:flex-end;overflow:hidden;background:#241a10}
+  .hero-media{position:absolute;inset:0;z-index:0}
+  .hero-media img{width:100%;height:100%;object-fit:cover;object-position:88% 30%;display:block;transform:scale(1.06);animation:heroZoom 10s ease-out both}
+  @keyframes heroZoom{to{transform:scale(1)}}
+  .hero-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(100deg,rgba(22,15,9,.92) 0%,rgba(22,15,9,.8) 30%,rgba(22,15,9,.4) 54%,rgba(22,15,9,.08) 74%)}
+  .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16%;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent,var(--ground))}
+  #petals{position:absolute;inset:0;z-index:2;pointer-events:none}
+  .hero-inner{position:relative;z-index:4;display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:120px 28px 90px;max-width:600px}
+  .hero-eyebrow{font-family:"Jost",sans-serif;font-size:.76rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-soft);opacity:0;animation:rise .8s .3s ease both}
+  .hero-title{font-family:"Cormorant Garamond",serif;font-weight:500;color:#FBF3E7;font-size:clamp(2.3rem,4.4vw,3.6rem);line-height:1.12;margin-top:16px;opacity:0;animation:rise .9s .5s ease both}
+  .hero-title em{font-style:italic;font-weight:400}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px;opacity:0;animation:rise .8s .8s both}
+  .hero .btn-primary{background:#F7EFE2;color:#2a1d12}
+  .hero .btn-primary:hover{background:#fff;transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.3)}
+  .hero .btn-ghost{border-color:rgba(231,200,120,.5);color:#F7EFE2}
+  .hero .btn-ghost:hover{border-color:var(--gold-soft);background:rgba(255,255,255,.08)}
+  .hero-loc{margin-top:26px;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:#D8C6AE;opacity:0;animation:rise .8s 1s both}
   @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-  .scroll-cue{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:7px;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#5b4a38;opacity:0;animation:fadeHdr .8s 1.9s ease forwards}
-  .scroll-cue .dot{width:5px;height:5px;border-radius:50%;background:#7a5a1f;animation:bob 1.8s ease-in-out infinite}
+  @media(max-width:640px){
+    .hero{min-height:auto;flex-direction:column;align-items:stretch}
+    .hero-media{position:relative;inset:auto;height:48vh;min-height:320px}
+    .hero-scrim,.hero::after{display:none}
+    #petals{display:none}
+    .hero-inner{max-width:none;padding:34px 20px 44px;background:linear-gradient(180deg,#241a10,#1f160d)}
+    .hero-title{font-size:clamp(2rem,8vw,2.6rem)}
+  }
+  .scroll-cue{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:7px;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:#D8C6AE;opacity:0;animation:fadeHdr .8s 1.9s ease forwards}
+  .scroll-cue .dot{width:5px;height:5px;border-radius:50%;background:var(--gold-soft);animation:bob 1.8s ease-in-out infinite}
+  @media(max-width:640px){.scroll-cue{display:none}}
   @keyframes bob{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(7px);opacity:1}}
 
   section{padding:78px 0}
@@ -163,7 +172,7 @@
 
   @media (prefers-reduced-motion: reduce){
     *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
-    .hero-logo{opacity:1;transform:none}.hero-line,.hero-cta,.hero-loc,header,.scroll-cue{opacity:1}#petals{display:none}
+    .hero-eyebrow,.hero-title,.hero-cta,.hero-loc,header,.scroll-cue{opacity:1}.hero-media img{transform:none}#petals{display:none}
   }
 </style>
 </head>
@@ -171,10 +180,9 @@
 
 <header>
   <div class="wrap nav">
-    <div class="brand">
-      <div class="mono">G<span class="a">&amp;</span>E</div>
-      <div class="nm">Greedy Cake &amp; Events</div>
-    </div>
+    <a class="brand" href="index.html" aria-label="Greedy Cake &amp; Events — accueil">
+      <img class="brand-logo" src="images/logo.png" width="712" height="748" alt="Greedy Cake &amp; Events">
+    </a>
     <nav class="nav-links">
       <a href="#creations">Créations</a>
       <a href="#evenements">Événements</a>
@@ -182,6 +190,7 @@
       <a href="devis.html">Devis</a>
     </nav>
     <div class="nav-right">
+      <a class="iconbtn" href="https://www.instagram.com/greedy.cake_events/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
       <button class="themebtn" id="themebtn" aria-label="Changer de thème">☾</button>
       <a href="devis.html" class="btn btn-primary">Demander un devis</a>
     </div>
@@ -190,11 +199,14 @@
 
 <!-- HERO -->
 <div class="hero">
+  <div class="hero-media">
+    <img src="images/hero-v2.jpg" width="1122" height="1402" alt="Hayette en train de décorer un gâteau fleuri" fetchpriority="high">
+  </div>
+  <div class="hero-scrim" aria-hidden="true"></div>
   <canvas id="petals"></canvas>
-  <div class="hero-glow"></div>
   <div class="hero-inner">
-    <img class="hero-logo" src="images/logo.png" width="900" height="900" alt="Greedy Cake &amp; Events — pâtisserie sur-mesure et décoration d'événements">
-    <p class="hero-line">Des créations sur-mesure pour vos plus beaux moments</p>
+    <p class="hero-eyebrow">Pâtisserie · Événementiel</p>
+    <h1 class="hero-title">Des créations sur-mesure<br>pour vos <em>plus beaux moments</em></h1>
     <div class="hero-cta">
       <a href="devis.html" class="btn btn-primary">Demander un devis</a>
       <a href="#creations" class="btn btn-ghost">Voir les créations</a>
