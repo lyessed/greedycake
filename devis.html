@@ -286,13 +286,13 @@ var RECEPTIONS = [
 ];
 var PRESTATIONS = [
   {k:"gateaux", cat:"gateau", title:"Gâteaux d'exception", sub:"Layer cake, number/letter cake, gâteau à thème, pièce montée"},
-  {k:"number", cat:"gateau", title:"Number / Letter cake", sub:"Un chiffre ou une initiale garnie"},
-  {k:"gourmandises", cat:"gourmandise", title:"Gourmandises individuelles", sub:"Cupcakes, bento cakes, mignardises"},
-  {k:"buffet", cat:"buffet", title:"Fraîcheur & buffets", sub:"Plateaux de fruits, sweet table"},
-  {k:"deco", cat:"deco", title:"Décoration & souvenirs", sub:"Bouquet de cupcakes, dragées & étiquettes perso"}
+  {k:"gourmandises", cat:"gourmandise", title:"Gourmandises individuelles", sub:"Cupcakes"},
+  {k:"bouquet", cat:"gourmandise", title:"Bouquet de cupcakes", sub:"Un bouquet 100 % gourmand"},
+  {k:"buffet", cat:"buffet", title:"Fraîcheur & buffets", sub:"Plateaux de fruits"},
+  {k:"deco", cat:"deco", title:"Souvenirs", sub:"Dragées & étiquettes perso"},
+  {k:"evenementiel", cat:"evenementiel", title:"Décorations d'évènements", sub:"Baby shower, anniversaires, baptême, tables dressées, soirées pyjama, sur-mesure"}
 ];
-var PARTS = ["10–15","15–20","20–30","30 et +"];
-var SAVEURS = ["Ganache fraise","Ganache framboise","Ganache chocolat Nutella","Ganache noix de coco (Raffaello)","Ganache mangue"];
+var SAVEURS = ["Ganache fraise","Ganache framboise","Ganache chocolat Nutella","Ganache chocolat blanc","Ganache noix de coco (Raffaello)","Ganache mangue"];
 var CUPCAKES = ["Nutella","Caramel beurre salé","Noix de coco","Fraises","Speculoos"];
 var QTES = ["Boîte de 6","Boîte de 12","Boîte de 24","Format buffet"];
 var REGIMES = ["Halal","Sans porc / sans alcool","Sans gluten"];
@@ -300,7 +300,7 @@ var REGIMES = ["Halal","Sans porc / sans alcool","Sans gluten"];
 /* ---------- État ---------- */
 var state = {
   date:"", type:"", reception:"", cp:"",
-  prestations:[], parts:"", saveurs:[], inscription:"", quantite:"", perso:"",
+  prestations:[], saveurs:[], inscription:"", quantite:"", perso:"", evenementTxt:"",
   regimes:[], allergies:"", cupcakes:[], file:null
 };
 var cur = 1, TOTAL = 4;
@@ -358,19 +358,14 @@ $("#file").onchange=function(){
 /* ---------- Étape 3 : blocs conditionnels ---------- */
 function has(cat){ return state.prestations.some(function(k){
   var p=PRESTATIONS.filter(function(x){return x.k===k})[0]; return p && p.cat===cat; }); }
-function hasNumber(){ return state.prestations.indexOf("number")>-1; }
 
 function buildStep3(){
   var h="";
   if(has("gateau")){
     h+='<div class="cond"><h4>Votre gâteau</h4>';
-    h+='<div class="field"><label class="lbl">Nombre de parts</label><div class="chips" id="partsChips">'+
-       PARTS.map(function(p){return '<div class="chip" data-v="'+p+'">'+p+'</div>'}).join("")+'</div></div>';
     h+='<div class="field"><label class="lbl">Saveurs souhaitées <span class="opt">(plusieurs possibles)</span></label><div class="chips" id="savChips">'+
        SAVEURS.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
-    if(hasNumber()){
-      h+='<div class="field"><label class="lbl" for="inscr">Chiffre(s) ou lettre(s) souhaité(s)</label><input type="text" id="inscr" placeholder="Ex : 30, ou les initiales A & M"></div>';
-    }
+    h+='<div class="field"><label class="lbl" for="inscr">Chiffre(s) ou lettre(s) souhaité(s) <span class="opt">(facultatif)</span></label><input type="text" id="inscr" placeholder="Ex : 30, ou les initiales A & M"></div>';
     h+='</div>';
   }
   if(has("gourmandise")||has("buffet")){
@@ -383,20 +378,25 @@ function buildStep3(){
        QTES.map(function(q){return '<div class="chip" data-v="'+q+'">'+q+'</div>'}).join("")+'</div></div></div>';
   }
   if(has("deco")){
-    h+='<div class="cond"><h4>Décoration & souvenirs</h4>'+
+    h+='<div class="cond"><h4>Souvenirs</h4>'+
        '<div class="field"><label class="lbl" for="persoTxt">Texte de personnalisation <span class="opt">(prénom, date, petit message…)</span></label>'+
        '<input type="text" id="persoTxt" placeholder="Ex : Bienvenue bébé Lina — 12 juin"></div></div>';
+  }
+  if(has("evenementiel")){
+    h+='<div class="cond"><h4>Décorations d\'évènements</h4>'+
+       '<div class="field"><label class="lbl" for="evenementTxt">Expliquez-nous votre envie <span class="opt">(thème, couleurs, date de l\'événement, lieu de l\'événement, nombre de personnes etc...)</span></label>'+
+       '<textarea id="evenementTxt" placeholder="Décrivez-nous votre projet…"></textarea></div></div>';
   }
   if(!h){ h='<p class="hint" style="margin-bottom:0">Rien à personnaliser ici — passez à la suite 🙂</p>'; }
   $("#condHost").innerHTML=h;
 
   // brancher les chips dynamiques
-  bindChips("#partsChips", function(v,multi){ state.parts=v; }, false);
   bindChips("#savChips", null, true, "saveurs");
   bindChips("#qteChips", function(v){ state.quantite=v; }, false);
   bindChips("#cupChips", null, true, "cupcakes");
   var ins=$("#inscr"); if(ins) ins.oninput=function(){state.inscription=this.value};
   var pt=$("#persoTxt"); if(pt) pt.oninput=function(){state.perso=this.value};
+  var et=$("#evenementTxt"); if(et) et.oninput=function(){state.evenementTxt=this.value};
 }
 function bindChips(sel, single, multi, key){
   var host=$(sel); if(!host)return;
@@ -479,9 +479,10 @@ function buildPayload(){
       reception:{ mode:state.reception, zone: state.reception==="livraison"?"Île-de-France (+20€)":null, code_postal: state.reception==="livraison"?$("#cp").value.trim():null } },
     prestations: state.prestations,
     details:{
-      gateau:{ parts:state.parts||null, saveurs:state.saveurs, inscription:state.inscription||null },
+      gateau:{ parts:null, saveurs:state.saveurs, inscription:state.inscription||null },
       gourmandises:{ quantite:state.quantite||null, parfums_cupcakes:state.cupcakes },
-      decoration:{ personnalisation:state.perso||null }
+      decoration:{ personnalisation:state.perso||null },
+      evenementiel:{ description:state.evenementTxt||null }
     },
     contraintes:{ regimes:state.regimes, allergies:$("#allergies").value.trim()||null },
     inspiration:{ fichier:state.file||null },

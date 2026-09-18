@@ -58,15 +58,21 @@
   .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--gold);transition:width .25s}
   .nav-links a:hover::after{width:100%}
   .nav-right{display:flex;align-items:center;gap:16px}
-  .themebtn,.iconbtn{background:none;border:1px solid var(--line);border-radius:999px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer;color:var(--ink-soft)}
-  .themebtn:hover,.iconbtn:hover{border-color:var(--gold);color:var(--gold)}
-  .iconbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6}
-  @media(max-width:860px){.nav-links{display:none}}
+  .themebtn,.iconbtn,.menubtn{background:none;border:1px solid var(--line);border-radius:999px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer;color:var(--ink-soft)}
+  .themebtn:hover,.iconbtn:hover,.menubtn:hover{border-color:var(--gold);color:var(--gold)}
+  .iconbtn svg,.menubtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6}
+  .menubtn{display:none}
+  .mobile-nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--ground);border-bottom:1px solid var(--line);box-shadow:0 16px 30px var(--shadow);flex-direction:column;padding:6px 20px 14px}
+  .mobile-nav.open{display:flex}
+  .mobile-nav a{padding:13px 2px;border-bottom:1px solid var(--line);font-size:.98rem;color:var(--ink)}
+  .mobile-nav a:last-child{border-bottom:none}
+  @media(max-width:860px){.nav-links{display:none}.menubtn{display:grid}}
   @media(max-width:480px){
     .wrap{padding:0 16px}
     .brand-logo{height:42px;width:42px}
-    .nav-right{gap:8px}
+    .nav-right{gap:7px}
     .nav-right .btn{padding:.65em 1em;font-size:.76rem}
+    .themebtn{display:none}
   }
 
   /* ===== HERO — logo couronne ===== */
@@ -76,7 +82,7 @@
   @keyframes heroZoom{to{transform:scale(1)}}
   .hero-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(100deg,rgba(22,15,9,.92) 0%,rgba(22,15,9,.8) 30%,rgba(22,15,9,.4) 54%,rgba(22,15,9,.08) 74%)}
   .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16%;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent,var(--ground))}
-  #petals{position:absolute;inset:0;z-index:2;pointer-events:none}
+  #petals{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
   .hero-inner{position:relative;z-index:4;display:flex;flex-direction:column;align-items:flex-start;text-align:left;padding:120px 28px 90px;max-width:600px}
   .hero-eyebrow{font-family:"Jost",sans-serif;font-size:.76rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-soft);opacity:0;animation:rise .8s .3s ease both}
   .hero-title{font-family:"Cormorant Garamond",serif;font-weight:500;color:#FBF3E7;font-size:clamp(2.3rem,4.4vw,3.6rem);line-height:1.12;margin-top:16px;opacity:0;animation:rise .9s .5s ease both}
@@ -92,7 +98,7 @@
     .hero{min-height:auto;flex-direction:column;align-items:stretch}
     .hero-media{position:relative;inset:auto;height:48vh;min-height:320px}
     .hero-scrim,.hero::after{display:none}
-    #petals{display:none}
+    #petals{inset:auto;top:0;left:0;right:0;width:100%;height:48vh;min-height:320px}
     .hero-inner{max-width:none;padding:34px 20px 44px;background:linear-gradient(180deg,#241a10,#1f160d)}
     .hero-title{font-size:clamp(2rem,8vw,2.6rem)}
   }
@@ -181,17 +187,24 @@
       <img class="brand-logo" src="images/logo.png" width="712" height="748" alt="Greedy Cake &amp; Events">
     </a>
     <nav class="nav-links">
-      <a href="#creations">Créations</a>
-      <a href="#evenements">Événements</a>
+      <a href="#creations">Créations Pâtisseries</a>
+      <a href="#evenements">Décorations d'évènements</a>
       <a href="#savoir">Savoir-faire</a>
       <a href="devis.html">Devis</a>
     </nav>
     <div class="nav-right">
       <a class="iconbtn" href="https://www.instagram.com/greedy.cake_events/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
       <button class="themebtn" id="themebtn" aria-label="Changer de thème">☾</button>
+      <button class="menubtn" id="menubtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileNav"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       <a href="devis.html" class="btn btn-primary">Demander un devis</a>
     </div>
   </div>
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#creations">Créations Pâtisseries</a>
+    <a href="#evenements">Décorations d'évènements</a>
+    <a href="#savoir">Savoir-faire</a>
+    <a href="devis.html">Devis</a>
+  </nav>
 </header>
 
 <!-- HERO -->
@@ -208,7 +221,7 @@
       <a href="devis.html" class="btn btn-primary">Demander un devis</a>
       <a href="#creations" class="btn btn-ghost">Voir les créations</a>
     </div>
-    <div class="hero-loc">Baby shower · Anniversaire · Baptème · Mariage</div>
+    <div class="hero-loc">Anniversaire · Mariage ou Fiançailles · Baptême · Fête de naissance ou baby shower · Diplôme ou réussite scolaire · Départ en retraite · Faire plaisir ou se faire plaisir</div>
   </div>
   <div class="scroll-cue"><span>Découvrir</span><span class="dot"></span></div>
 </div>
@@ -339,10 +352,10 @@
 (function(){
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var cv=document.getElementById('petals'); if(!cv||reduce) return;
-  var ctx=cv.getContext('2d'), hero=cv.parentElement, dpr=Math.min(devicePixelRatio||1,2), P=[];
-  function size(){cv.width=hero.clientWidth*dpr;cv.height=hero.clientHeight*dpr;}
+  var ctx=cv.getContext('2d'), dpr=Math.min(devicePixelRatio||1,2), P=[];
+  function size(){cv.width=cv.clientWidth*dpr;cv.height=cv.clientHeight*dpr;}
   size();
-  var n=Math.round(Math.min(34,hero.clientWidth/44));
+  var n=Math.round(Math.min(34,cv.clientWidth/44));
   for(var i=0;i<n;i++){
     P.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:(1.2+Math.random()*3)*dpr,
       vy:(0.15+Math.random()*0.4)*dpr,ph:Math.random()*6.28,amp:(6+Math.random()*20)*dpr,
@@ -376,6 +389,19 @@
     if(!now){now=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}
     setT(now==='dark'?'light':'dark');
   });
+})();
+
+// menu mobile
+(function(){
+  var btn=document.getElementById('menubtn'), nav=document.getElementById('mobileNav');
+  if(!btn||!nav) return;
+  function close(){ nav.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click',function(){
+    var open=nav.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open?'true':'false');
+  });
+  nav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', close); });
+  addEventListener('resize', function(){ if(innerWidth>860) close(); });
 })();
 </script>
 </body>
