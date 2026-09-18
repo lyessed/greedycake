@@ -202,9 +202,8 @@
       </div>
 
       <div class="field">
-        <label class="lbl">Régime particulier ou allergies <span class="opt">(facultatif)</span></label>
-        <div class="chips" id="regimeChips"></div>
-        <input type="text" id="allergies" name="allergies" placeholder="Autre précision (sans fruits à coque, etc.)" style="margin-top:11px">
+        <label class="lbl" for="allergies">Allergies ou régime particulier <span class="opt">(facultatif)</span></label>
+        <input type="text" id="allergies" name="allergies" placeholder="Ex : sans fruits à coque, halal, sans gluten…">
       </div>
     </div>
 
@@ -285,7 +284,8 @@ var RECEPTIONS = [
   {k:"livraison", title:"Livraison", sub:"Île-de-France — +20 €"}
 ];
 var PRESTATIONS = [
-  {k:"gateaux", cat:"gateau", title:"Gâteaux d'exception", sub:"Layer cake, number/letter cake, gâteau à thème, pièce montée"},
+  {k:"gateaux", cat:"gateau", title:"Gâteaux d'exception", sub:"Layer cake, gâteau à thème, pièce montée"},
+  {k:"number", cat:"gateau", title:"Number / Letter cake", sub:"Un chiffre ou une initiale garnie"},
   {k:"gourmandises", cat:"gourmandise", title:"Gourmandises individuelles", sub:"Cupcakes"},
   {k:"bouquet", cat:"gourmandise", title:"Bouquet de cupcakes", sub:"Un bouquet 100 % gourmand"},
   {k:"buffet", cat:"buffet", title:"Fraîcheur & buffets", sub:"Plateaux de fruits"},
@@ -295,7 +295,6 @@ var PRESTATIONS = [
 var SAVEURS = ["Ganache fraise","Ganache framboise","Ganache chocolat Nutella","Ganache chocolat blanc","Ganache noix de coco (Raffaello)","Ganache mangue"];
 var CUPCAKES = ["Nutella","Caramel beurre salé","Noix de coco","Fraises","Speculoos"];
 var QTES = ["Boîte de 6","Boîte de 12","Boîte de 24","Format buffet"];
-var REGIMES = ["Halal","Sans porc / sans alcool","Sans gluten"];
 
 /* ---------- État ---------- */
 var state = {
@@ -316,7 +315,6 @@ function pickCard(k,title,sub,radio){
 $("#typeGrid").innerHTML = EVENTS.map(function(e){return pickCard(e.k,e.label,"",true)}).join("");
 $("#recGrid").innerHTML = RECEPTIONS.map(function(r){return pickCard(r.k,r.title,r.sub,true)}).join("");
 $("#prestaGrid").innerHTML = PRESTATIONS.map(function(p){return pickCard(p.k,p.title,p.sub,false)}).join("");
-$("#regimeChips").innerHTML = REGIMES.map(function(r){return '<div class="chip" data-v="'+r+'">'+r+'</div>'}).join("");
 
 /* date mini = aujourd'hui + 7 jours */
 (function(){
@@ -342,12 +340,6 @@ $$("#prestaGrid .pick").forEach(function(el){el.onclick=function(){
   var k=el.dataset.k, i=state.prestations.indexOf(k);
   if(i>-1)state.prestations.splice(i,1); else state.prestations.push(k);
   clearErr(el.closest(".field"));
-}});
-// régimes (chips)
-$$("#regimeChips .chip").forEach(function(el){el.onclick=function(){
-  el.classList.toggle("sel");
-  var v=el.dataset.v, i=state.regimes.indexOf(v);
-  if(i>-1)state.regimes.splice(i,1); else state.regimes.push(v);
 }});
 // upload
 $("#file").onchange=function(){
