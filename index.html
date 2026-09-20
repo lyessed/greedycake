@@ -80,6 +80,7 @@
   .hero-media{position:absolute;inset:0;z-index:0}
   .hero-media{background:var(--surface-2)}
   .hero-media img{width:100%;height:100%;object-fit:contain;object-position:50% 50%;display:block}
+  @media(min-width:641px){.hero-media img{object-fit:cover}}
   .hero-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(100deg,rgba(22,15,9,.92) 0%,rgba(22,15,9,.8) 30%,rgba(22,15,9,.4) 54%,rgba(22,15,9,.08) 74%)}
   .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16%;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent,var(--ground))}
   #petals{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
@@ -210,7 +211,10 @@
 <!-- HERO -->
 <div class="hero">
   <div class="hero-media">
-    <img src="images/hero-v2.jpg" width="1122" height="1402" alt="Wedding cake Greedy Cake &amp; Events, roses blanches et topper Mr &amp; Mrs" fetchpriority="high">
+    <picture>
+      <source media="(min-width:641px)" srcset="images/hero-wide.jpg">
+      <img src="images/hero-v2.jpg" width="1122" height="1402" alt="Wedding cake Greedy Cake &amp; Events, roses blanches et topper Mr &amp; Mrs" fetchpriority="high">
+    </picture>
   </div>
   <div class="hero-scrim" aria-hidden="true"></div>
   <canvas id="petals"></canvas>

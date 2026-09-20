@@ -84,6 +84,7 @@
   .hero-v2-media{position:absolute;inset:0;z-index:0}
   .hero-v2-media{background:var(--surface-2)}
   .hero-v2-media img{width:100%;height:100%;object-fit:contain;object-position:50% 50%;display:block}
+  @media(min-width:641px){.hero-v2-media img{object-fit:cover}}
   .hero-v2-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(100deg,rgba(22,15,9,.95) 0%,rgba(22,15,9,.88) 34%,rgba(22,15,9,.55) 56%,rgba(22,15,9,.12) 78%)}
   .hero-v2-content{position:relative;z-index:2;padding:128px 28px 96px;max-width:560px}
   .hero-v2-eyebrow{font-family:"Jost",sans-serif;font-size:.76rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-soft);opacity:0;animation:v2rise .8s .3s ease both}
@@ -218,7 +219,10 @@
 <!-- HERO V2 -->
 <section class="hero-v2">
   <div class="hero-v2-media">
-    <img src="images/hero-v2.jpg" width="1122" height="1402" fetchpriority="high" alt="Wedding cake Greedy Cake &amp; Events, roses blanches et topper Mr &amp; Mrs">
+    <picture>
+      <source media="(min-width:641px)" srcset="images/hero-wide.jpg">
+      <img src="images/hero-v2.jpg" width="1122" height="1402" fetchpriority="high" alt="Wedding cake Greedy Cake &amp; Events, roses blanches et topper Mr &amp; Mrs">
+    </picture>
   </div>
   <div class="hero-v2-scrim" aria-hidden="true"></div>
   <div class="hero-v2-content wrap">
