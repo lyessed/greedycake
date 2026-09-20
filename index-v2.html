@@ -141,7 +141,9 @@
   @media(max-width:520px){.cards{grid-template-columns:1fr}}
 
   .ev-list{display:grid;grid-template-columns:repeat(2,1fr);gap:0 60px}
-  .ev-item{display:flex;gap:18px;padding:22px 0;border-bottom:1px solid var(--line)}
+  .ev-item{display:flex;gap:16px;align-items:flex-start;padding:22px 0;border-bottom:1px solid var(--line)}
+  .ev-item .ev-ph{flex:none;width:76px;height:76px;border-radius:14px;overflow:hidden;background:var(--surface-2)}
+  .ev-item .ev-ph img{width:100%;height:100%;object-fit:cover;display:block}
   .ev-item .k{font-family:"Cormorant Garamond",serif;color:var(--gold);font-size:1.5rem;min-width:26px}
   .ev-item h4{font-size:1.02rem;font-weight:500}
   .ev-item p{font-size:.85rem;color:var(--ink-soft);margin-top:3px}
@@ -272,12 +274,12 @@
       <p>De la table dressée à la scénographie complète, on habille votre événement dans une ambiance chic et cohérente.</p>
     </div>
     <div class="ev-list">
-      <div class="ev-item"><div class="k">01</div><div><h4>Baby shower</h4><p>Arche, sweet table, ballons et déco assortie pour fêter l'arrivée de bébé.</p></div></div>
-      <div class="ev-item"><div class="k">02</div><div><h4>Anniversaires</h4><p>Thèmes enfants et adultes, décor complet et gâteau sur-mesure.</p></div></div>
-      <div class="ev-item"><div class="k">03</div><div><h4>Baptème &amp; communion</h4><p>Une ambiance douce et élégante pour les grandes occasions de famille.</p></div></div>
-      <div class="ev-item"><div class="k">04</div><div><h4>Tables dressées</h4><p>Art de la table raffiné.</p></div></div>
-      <div class="ev-item"><div class="k">05</div><div><h4>Soirées pyjama</h4><p>Tentes teepee et déco cocooning pour des fêtes d'enfants inoubliables.</p></div></div>
-      <div class="ev-item"><div class="k">06</div><div><h4>Événements sur-mesure</h4><p>Un projet particulier ? On le construit ensemble, de A à Z.</p></div></div>
+      <div class="ev-item"><div class="ev-ph"><img src="images/evenements/ev-baby-shower.jpg" alt="Décoration baby shower" loading="lazy"></div><div class="k">01</div><div><h4>Baby shower</h4><p>Arche, sweet table, ballons et déco assortie pour fêter l'arrivée de bébé.</p></div></div>
+      <div class="ev-item"><div class="ev-ph"><img src="images/evenements/ev-anniversaires.jpg" alt="Décoration anniversaire" loading="lazy"></div><div class="k">02</div><div><h4>Anniversaires</h4><p>Thèmes enfants et adultes, décor complet et gâteau sur-mesure.</p></div></div>
+      <div class="ev-item"><div class="ev-ph"><img src="images/evenements/ev-bapteme.jpg" alt="Décoration baptème et communion" loading="lazy"></div><div class="k">03</div><div><h4>Baptème &amp; communion</h4><p>Une ambiance douce et élégante pour les grandes occasions de famille.</p></div></div>
+      <div class="ev-item"><div class="ev-ph"><img src="images/evenements/ev-tables-dressees.jpg" alt="Table dressée raffinée" loading="lazy"></div><div class="k">04</div><div><h4>Tables dressées</h4><p>Art de la table raffiné.</p></div></div>
+      <div class="ev-item"><div class="ev-ph"><img src="images/evenements/ev-soirees-pyjama.jpg" alt="Soirée pyjama avec tentes teepee" loading="lazy"></div><div class="k">05</div><div><h4>Soirées pyjama</h4><p>Tentes teepee et déco cocooning pour des fêtes d'enfants inoubliables.</p></div></div>
+      <div class="ev-item"><div class="ev-ph"><img src="images/evenements/ev-sur-mesure.jpg" alt="Décoration événement sur-mesure" loading="lazy"></div><div class="k">06</div><div><h4>Événements sur-mesure</h4><p>Un projet particulier ? On le construit ensemble, de A à Z.</p></div></div>
     </div>
   </div>
 </section>
