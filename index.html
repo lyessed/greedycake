@@ -78,8 +78,8 @@
   /* ===== HERO — logo couronne ===== */
   .hero{position:relative;min-height:92vh;display:flex;align-items:flex-end;overflow:hidden;background:#241a10}
   .hero-media{position:absolute;inset:0;z-index:0}
-  .hero-media img{width:100%;height:100%;object-fit:cover;object-position:58% 45%;display:block;transform:scale(1.06);animation:heroZoom 10s ease-out both}
-  @keyframes heroZoom{to{transform:scale(1)}}
+  .hero-media{background:var(--surface-2)}
+  .hero-media img{width:100%;height:100%;object-fit:contain;object-position:50% 50%;display:block}
   .hero-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(100deg,rgba(22,15,9,.92) 0%,rgba(22,15,9,.8) 30%,rgba(22,15,9,.4) 54%,rgba(22,15,9,.08) 74%)}
   .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16%;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent,var(--ground))}
   #petals{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
@@ -116,15 +116,15 @@
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
   .card{background:var(--ground);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .25s ease,box-shadow .25s ease}
   .card:hover{transform:translateY(-4px);box-shadow:0 18px 36px var(--shadow)}
-  .card .ph{height:170px;position:relative}
-  .card .ph::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 30% 15%,rgba(255,255,255,.25),transparent 55%)}
+  .card .ph{height:200px;position:relative;background:var(--surface-2)}
+  .card .ph::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 30% 15%,rgba(255,255,255,.12),transparent 55%);pointer-events:none}
   .p1{background:linear-gradient(150deg,#d9c4a6,#b7986f)}
   .p2{background:linear-gradient(150deg,#c7ad86,#9c7f57)}
   .p3{background:linear-gradient(150deg,#aeb193,#82875f)}
   .p4{background:linear-gradient(150deg,#e3d0bb,#c3a67f)}
   .p5{background:linear-gradient(150deg,#d3b48f,#a9855b)}
   .p6{background:linear-gradient(150deg,#cdbfa8,#a3927a)}
-  .card .ph img{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
+  .card .ph img{width:100%;height:100%;object-fit:contain;display:block;border-radius:inherit}
   .card .body{padding:18px 20px 22px}
   .card h3{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:1.32rem;margin-bottom:5px}
   .card p{font-size:.86rem;color:var(--ink-soft);line-height:1.55}
@@ -238,9 +238,9 @@
       <article class="card"><div class="ph p1"><img src="images/creations/p1-layer-cake.jpg" alt="Layer cake sur-mesure" loading="lazy"></div><div class="body"><h3>Layer cakes</h3><p>Gâteaux à étages personnalisés, décor sur-mesure selon votre thème.</p></div></article>
       <article class="card"><div class="ph p2"><img src="images/creations/p2-number-cake.jpg" alt="Number cake garni de fruits et de fleurs" loading="lazy"></div><div class="body"><h3>Number &amp; letter cakes</h3><p>Le chiffre ou l'initiale à l'honneur, garni de fruits frais et de fleurs.</p></div></article>
       <article class="card"><div class="ph p3"><img src="images/creations/p3-piece-montee.jpg" alt="Pièce montée fleurie pour réception" loading="lazy"></div><div class="body"><h3>Pièces montées</h3><p>La pièce centrale de votre réception, gourmande et spectaculaire.</p></div></article>
-      <article class="card"><div class="ph p4"><img src="images/creations/p4-bouquet-cupcakes.jpg" alt="Bouquet de cupcakes fleuris" loading="lazy"></div><div class="body"><h3>Bouquets de cupcakes</h3><p>Un bouquet 100 % gourmand, aussi joli qu'un vrai. Parfait à offrir.</p></div></article>
+      <article class="card"><div class="ph p4"><img src="images/creations/p4-bouquet-cupcakes.jpg" alt="Bouquet de cupcakes fleuris" loading="lazy"></div><div class="body"><h3>Cupcakes et Bouquet de Cupcakes</h3><p>Un bouquet 100 % gourmand, aussi joli qu'un vrai. Parfait à offrir.</p></div></article>
       <article class="card"><div class="ph p5"><img src="images/creations/p5-plateau-fruits.jpg" alt="Plateau de fruits frais pour buffet" loading="lazy"></div><div class="body"><h3>Plateaux de fruits</h3><p>Compositions fraîches et généreuses pour vos buffets et tables sucrées.</p></div></article>
-      <article class="card"><div class="ph p6"><img src="images/creations/p6-dragees.jpg" alt="Dragées et étiquettes personnalisées" loading="lazy"></div><div class="body"><h3>Dragées &amp; étiquettes perso</h3><p>Boîtes de dragées et bonbons avec étiquettes personnalisées à votre nom.</p></div></article>
+      <article class="card"><div class="ph p6"><img src="images/creations/p6-dragees.jpg" alt="Dragées et étiquettes personnalisées" loading="lazy"></div><div class="body"><h3>Dragées &amp; Etiquettes Perso</h3><p>Boîtes de dragées et bonbons avec étiquettes personnalisées à votre nom.</p></div></article>
     </div>
   </div>
 </section>
@@ -257,7 +257,7 @@
       <div class="ev-item"><div class="k">01</div><div><h4>Baby shower</h4><p>Arche, sweet table, ballons et déco assortie pour fêter l'arrivée de bébé.</p></div></div>
       <div class="ev-item"><div class="k">02</div><div><h4>Anniversaires</h4><p>Thèmes enfants et adultes, décor complet et gâteau sur-mesure.</p></div></div>
       <div class="ev-item"><div class="k">03</div><div><h4>Baptème &amp; communion</h4><p>Une ambiance douce et élégante pour les grandes occasions de famille.</p></div></div>
-      <div class="ev-item"><div class="k">04</div><div><h4>Tables dressées</h4><p>Art de la table raffiné : vaisselle, serviettes pliées, chemins de table.</p></div></div>
+      <div class="ev-item"><div class="k">04</div><div><h4>Tables dressées</h4><p>Art de la table raffiné.</p></div></div>
       <div class="ev-item"><div class="k">05</div><div><h4>Soirées pyjama</h4><p>Tentes teepee et déco cocooning pour des fêtes d'enfants inoubliables.</p></div></div>
       <div class="ev-item"><div class="k">06</div><div><h4>Événements sur-mesure</h4><p>Un projet particulier ? On le construit ensemble, de A à Z.</p></div></div>
     </div>
@@ -323,8 +323,8 @@
           <h5>Créations</h5>
           <a href="#creations">Layer cakes</a>
           <a href="#creations">Pièces montées</a>
-          <a href="#creations">Bouquets de cupcakes</a>
-          <a href="#creations">Dragées perso</a>
+          <a href="#creations">Cupcakes et Bouquet de Cupcakes</a>
+          <a href="#creations">Dragées &amp; Etiquettes Perso</a>
         </div>
         <div>
           <h5>Événements</h5>
