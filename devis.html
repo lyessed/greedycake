@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -359,8 +359,10 @@ function buildStep3(){
   var isNumber = state.prestations.indexOf("number")>-1;
   if(has("gateau")){
     h+='<div class="cond"><h4>Votre gâteau</h4>';
-    h+='<div class="field"><label class="lbl">Saveurs souhaitées <span class="opt">(plusieurs possibles)</span></label><div class="chips" id="savChips">'+
-       SAVEURS.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
+    if(!isNumber){
+      h+='<div class="field"><label class="lbl">Saveurs souhaitées <span class="opt">(plusieurs possibles)</span></label><div class="chips" id="savChips">'+
+         SAVEURS.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
+    }
     if(isNumber){
       h+='<div class="field"><label class="lbl">Ganache du number / letter cake</label><div class="chips" id="numGanacheChips">'+
          GANACHES_NUMBER.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
