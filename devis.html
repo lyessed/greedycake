@@ -373,7 +373,7 @@ function buildStep3(){
   if(has("gourmandise")||has("buffet")){
     h+='<div class="cond"><h4>Gourmandises / buffet</h4>';
     if(state.prestations.indexOf("gourmandises")>-1){
-      h+='<div class="field"><label class="lbl">Parfums des cupcakes <span class="opt">(fourrés, 4 € l\'unité — plusieurs possibles)</span></label><div class="chips" id="cupChips">'+
+      h+='<div class="field"><label class="lbl">Parfums des cupcakes <span class="opt">(plusieurs possibles)</span></label><div class="chips" id="cupChips">'+
          CUPCAKES.map(function(c){return '<div class="chip" data-v="'+c+'">'+c+'</div>'}).join("")+'</div></div>';
       h+='<div class="field"><label class="lbl">Quantité estimée</label><div class="chips" id="qteChips">'+
          QTES.map(function(q){return '<div class="chip" data-v="'+q+'">'+q+'</div>'}).join("")+'</div></div>';
