@@ -280,7 +280,8 @@ var PRESTATIONS = [
   {k:"buffet", cat:"buffet", title:"Fraîcheur & buffets", sub:"Plateaux de fruits"},
   {k:"deco", cat:"deco", title:"Souvenirs", sub:"Petites boîtes, étiquettes personnalisées avec ou sans dragées"}
 ];
-var SAVEURS = ["Ganache fraise","Ganache framboise","Ganache chocolat Nutella","Ganache chocolat blanc","Ganache noix de coco (Raffaello)","Ganache mangue"];
+var SAVEURS = ["Ganache fraise","Ganache framboise","Ganache chocolat Nutella","Ganache chocolat blanc","Ganache noix de coco","Ganache mangue"];
+var OPTIONS_GATEAU = ["Morceau de Kinder Bueno","Morceau de Raffaello"];
 var TYPES_GATEAU = ["Layer cake","Gâteau à thème","Pièce montée","Autre"];
 var TYPES_NUMBER = ["Number cake","Letter cake","Heart cake"];
 var DECORS_NUMBER = ["Fruits","Chocolats"];
@@ -293,7 +294,7 @@ var DRAGEES_OPT = ["Avec dragées","Sans dragées"];
 /* ---------- État ---------- */
 var state = {
   date:"", type:"", reception:"", cp:"",
-  prestations:[], typeGateau:"", typeNumber:"", decorNumber:"", modeleSouhaite:"",
+  prestations:[], typeGateau:"", typeNumber:"", decorNumber:"", optionGateau:"", modeleSouhaite:"",
   saveurs:[], ganacheNumber:"", inscription:"", quantite:"", bouquetQte:"", plateauTaille:"", perso:"", dragees:"", evenementTxt:"", adresseEvenement:"",
   regimes:[], cupcakes:[], file:null
 };
@@ -356,6 +357,8 @@ function buildStep3(){
          TYPES_GATEAU.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
       h+='<div class="field"><label class="lbl">Saveur souhaitée</label><div class="chips" id="savChips">'+
          SAVEURS.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
+      h+='<div class="field"><label class="lbl">Option <span class="opt">(facultatif)</span></label><div class="chips" id="optionGateauChips">'+
+         OPTIONS_GATEAU.map(function(o){return '<div class="chip" data-v="'+o+'">'+o+'</div>'}).join("")+'</div></div>';
       h+='<div class="field"><label class="lbl" for="modeleTxt">Modèle souhaité <span class="opt">(thème, couleurs…)</span></label>'+
          '<textarea id="modeleTxt" rows="3" placeholder="Ex : Gâteau licorne, couleurs pastel rose et violet, avec des étoiles dorées…"></textarea></div>';
     }
@@ -420,6 +423,7 @@ function buildStep3(){
   bindChips("#cupChips", null, true, "cupcakes");
   bindChips("#plateauChips", function(v){ state.plateauTaille=v; }, false);
   bindChips("#drageesChips", function(v){ state.dragees=v; }, false);
+  bindChips("#optionGateauChips", function(v){ state.optionGateau=v; }, false);
   var mt=$("#modeleTxt"); if(mt) mt.oninput=function(){state.modeleSouhaite=this.value};
   var ins=$("#inscr"); if(ins) ins.oninput=function(){state.inscription=this.value};
   var bq=$("#bouquetQte"); if(bq) bq.oninput=function(){state.bouquetQte=this.value};
@@ -529,7 +533,7 @@ function buildPayload(){
       reception:{ mode:state.reception, zone: state.reception==="livraison"?"Île-de-France (+20€)":null, code_postal: state.reception==="livraison"?$("#cp").value.trim():null } },
     prestations: state.prestations,
     details:{
-      gateau:{ type_gateau:state.typeGateau||null, modele_souhaite:state.modeleSouhaite||null, saveurs:state.saveurs, type_number:state.typeNumber||null, ganache_number:state.ganacheNumber||null, decor:state.decorNumber||null, inscription:state.inscription||null },
+      gateau:{ type_gateau:state.typeGateau||null, modele_souhaite:state.modeleSouhaite||null, option:state.optionGateau||null, saveurs:state.saveurs, type_number:state.typeNumber||null, ganache_number:state.ganacheNumber||null, decor:state.decorNumber||null, inscription:state.inscription||null },
       gourmandises:{ quantite:state.quantite||null, parfums_cupcakes:state.cupcakes, bouquet_nb_cupcakes:state.bouquetQte||null, plateau_fruits_taille:state.plateauTaille||null },
       decoration:{ personnalisation:state.perso||null, dragees:state.dragees||null },
       evenementiel:{ description:state.evenementTxt||null, adresse:state.adresseEvenement||null }
