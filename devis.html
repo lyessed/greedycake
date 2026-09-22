@@ -294,7 +294,7 @@ var TYPES_NUMBER = ["Number cake","Letter cake","Heart cake"];
 var DECORS_NUMBER = ["Fruits","Chocolats"];
 var GANACHES_NUMBER = ["Ganache chocolat blanc","Ganache chocolat Nutella"];
 var CUPCAKES = ["Nutella","Caramel beurre salé","Noix de coco","Fraises","Speculoos"];
-var QTES = ["Boîte de 6","Boîte de 12","Boîte de 24"];
+var QTES = ["Boîte de 6","Boîte de 12","Boîte de 24","Autre"];
 var PLATEAUX = ["Petit plateau","Moyen plateau","Grand plateau"];
 var DRAGEES_OPT = ["Avec dragées","Sans dragées"];
 
@@ -387,7 +387,8 @@ function buildStep3(){
       h+='<div class="field"><label class="lbl">Parfums des cupcakes <span class="opt">(plusieurs possibles)</span></label><div class="chips" id="cupChips">'+
          CUPCAKES.map(function(c){return '<div class="chip" data-v="'+c+'">'+c+'</div>'}).join("")+'</div></div>';
       h+='<div class="field"><label class="lbl">Quantité estimée</label><div class="chips" id="qteChips">'+
-         QTES.map(function(q){return '<div class="chip" data-v="'+q+'">'+q+'</div>'}).join("")+'</div></div>';
+         QTES.map(function(q){return '<div class="chip" data-v="'+q+'">'+q+'</div>'}).join("")+'</div>'+
+         '<div id="qteAutreWrap" style="display:none;margin-top:10px"><input type="text" id="qteAutre" placeholder="Indiquer le nombre de cupcakes souhaités"></div></div>';
     }
     if(state.prestations.indexOf("bouquet")>-1){
       h+='<div class="field"><label class="lbl" for="bouquetQte">Nombre de cupcakes souhaités <span class="opt">(pour le bouquet)</span></label><input type="text" id="bouquetQte" placeholder="Ex : 24 cupcakes"></div>';
@@ -422,7 +423,11 @@ function buildStep3(){
   bindChips("#savChips", function(v){ state.saveurs=[v]; }, false);
   bindChips("#numGanacheChips", function(v){ state.ganacheNumber=v; }, false);
   bindChips("#decorNumberChips", function(v){ state.decorNumber=v; }, false);
-  bindChips("#qteChips", function(v){ state.quantite=v; }, false);
+  bindChips("#qteChips", function(v){
+    state.quantite=v;
+    var wrap=$("#qteAutreWrap"); if(wrap) wrap.style.display = v==="Autre" ? "block" : "none";
+    var inp=$("#qteAutre"); if(inp){ inp.oninput=function(){state.quantite="Autre: "+this.value}; if(v!=="Autre") inp.value=""; }
+  }, false);
   bindChips("#cupChips", null, true, "cupcakes");
   bindChips("#plateauChips", function(v){ state.plateauTaille=v; }, false);
   bindChips("#drageesChips", function(v){ state.dragees=v; }, false);
