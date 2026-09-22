@@ -340,11 +340,6 @@ $$("#prestaGrid .pick").forEach(function(el){el.onclick=function(){
   if(i>-1)state.prestations.splice(i,1); else state.prestations.push(k);
   clearErr(el.closest(".field"));
 }});
-// upload
-$("#file").onchange=function(){
-  var f=this.files[0];
-  if(f){ state.file=f.name; $("#fileTx").innerHTML=f.name+'<span>Cliquez pour changer</span>'; }
-};
 
 /* ---------- Étape 3 : blocs conditionnels ---------- */
 function has(cat){ return state.prestations.some(function(k){
