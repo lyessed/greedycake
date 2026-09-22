@@ -289,6 +289,8 @@ var PRESTATIONS = [
   {k:"deco", cat:"deco", title:"Souvenirs", sub:"Petites boîtes, étiquettes personnalisées avec ou sans dragées"}
 ];
 var SAVEURS = ["Ganache fraise","Ganache framboise","Ganache chocolat Nutella","Ganache chocolat blanc","Ganache noix de coco (Raffaello)","Ganache mangue"];
+var TYPES_GATEAU = ["Layer cake","Gâteau à thème","Pièce montée","Autre"];
+var TYPES_NUMBER = ["Number cake","Letter cake"];
 var GANACHES_NUMBER = ["Ganache chocolat blanc","Ganache chocolat Nutella"];
 var CUPCAKES = ["Nutella","Caramel beurre salé","Noix de coco","Fraises","Speculoos"];
 var QTES = ["Boîte de 6","Boîte de 12","Boîte de 24"];
@@ -298,7 +300,8 @@ var DRAGEES_OPT = ["Avec dragées","Sans dragées"];
 /* ---------- État ---------- */
 var state = {
   date:"", type:"", reception:"", cp:"",
-  prestations:[], saveurs:[], ganacheNumber:"", inscription:"", quantite:"", bouquetQte:"", plateauTaille:"", perso:"", dragees:"", evenementTxt:"", adresseEvenement:"",
+  prestations:[], typeGateau:"", typeNumber:"",
+  saveurs:[], ganacheNumber:"", inscription:"", quantite:"", bouquetQte:"", plateauTaille:"", perso:"", dragees:"", evenementTxt:"", adresseEvenement:"",
   regimes:[], cupcakes:[], file:null
 };
 var cur = 1, TOTAL = 4;
@@ -357,14 +360,19 @@ function has(cat){ return state.prestations.some(function(k){
 function buildStep3(){
   var h="";
   var isNumber = state.prestations.indexOf("number")>-1;
+  var isGateau = state.prestations.indexOf("gateaux")>-1;
   if(has("gateau")){
     h+='<div class="cond"><h4>Votre gâteau</h4>';
-    if(!isNumber){
+    if(isGateau){
+      h+='<div class="field"><label class="lbl">Type de gâteau</label><div class="chips" id="typeGateauChips">'+
+         TYPES_GATEAU.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
       h+='<div class="field"><label class="lbl">Saveurs souhaitées <span class="opt">(plusieurs possibles)</span></label><div class="chips" id="savChips">'+
          SAVEURS.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
     }
     if(isNumber){
-      h+='<div class="field"><label class="lbl">Ganache du number / letter cake</label><div class="chips" id="numGanacheChips">'+
+      h+='<div class="field"><label class="lbl">Type</label><div class="chips" id="typeNumberChips">'+
+         TYPES_NUMBER.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
+      h+='<div class="field"><label class="lbl">Ganache</label><div class="chips" id="numGanacheChips">'+
          GANACHES_NUMBER.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
       h+='<div class="field"><label class="lbl" for="inscr">Chiffre(s) ou lettre(s) souhaité(s) <span class="opt">(facultatif)</span></label><input type="text" id="inscr" placeholder="Ex : 30, ou les initiales A & M"></div>';
     }
@@ -406,6 +414,8 @@ function buildStep3(){
   $("#condHost").innerHTML=h;
 
   // brancher les chips dynamiques
+  bindChips("#typeGateauChips", function(v){ state.typeGateau=v; }, false);
+  bindChips("#typeNumberChips", function(v){ state.typeNumber=v; }, false);
   bindChips("#savChips", null, true, "saveurs");
   bindChips("#numGanacheChips", function(v){ state.ganacheNumber=v; }, false);
   bindChips("#qteChips", function(v){ state.quantite=v; }, false);
@@ -520,7 +530,7 @@ function buildPayload(){
       reception:{ mode:state.reception, zone: state.reception==="livraison"?"Île-de-France (+20€)":null, code_postal: state.reception==="livraison"?$("#cp").value.trim():null } },
     prestations: state.prestations,
     details:{
-      gateau:{ parts:null, saveurs:state.saveurs, ganache_number:state.ganacheNumber||null, inscription:state.inscription||null },
+      gateau:{ type_gateau:state.typeGateau||null, saveurs:state.saveurs, type_number:state.typeNumber||null, ganache_number:state.ganacheNumber||null, inscription:state.inscription||null },
       gourmandises:{ quantite:state.quantite||null, parfums_cupcakes:state.cupcakes, bouquet_nb_cupcakes:state.bouquetQte||null, plateau_fruits_taille:state.plateauTaille||null },
       decoration:{ personnalisation:state.perso||null, dragees:state.dragees||null },
       evenementiel:{ description:state.evenementTxt||null, adresse:state.adresseEvenement||null }
