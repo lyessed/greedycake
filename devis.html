@@ -293,7 +293,7 @@ var DRAGEES_OPT = ["Avec dragées","Sans dragées"];
 /* ---------- État ---------- */
 var state = {
   date:"", type:"", reception:"", cp:"",
-  prestations:[], typeGateau:"", typeNumber:"", decorNumber:"",
+  prestations:[], typeGateau:"", typeNumber:"", decorNumber:"", modeleSouhaite:"",
   saveurs:[], ganacheNumber:"", inscription:"", quantite:"", bouquetQte:"", plateauTaille:"", perso:"", dragees:"", evenementTxt:"", adresseEvenement:"",
   regimes:[], cupcakes:[], file:null
 };
@@ -361,6 +361,8 @@ function buildStep3(){
          TYPES_GATEAU.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
       h+='<div class="field"><label class="lbl">Saveur souhaitée</label><div class="chips" id="savChips">'+
          SAVEURS.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
+      h+='<div class="field"><label class="lbl" for="modeleTxt">Modèle souhaité <span class="opt">(thème, couleurs…)</span></label>'+
+         '<textarea id="modeleTxt" rows="3" placeholder="Ex : Gâteau licorne, couleurs pastel rose et violet, avec des étoiles dorées…"></textarea></div>';
     }
     if(isNumber){
       h+='<div class="field"><label class="lbl">Type</label><div class="chips" id="typeNumberChips">'+
@@ -423,6 +425,7 @@ function buildStep3(){
   bindChips("#cupChips", null, true, "cupcakes");
   bindChips("#plateauChips", function(v){ state.plateauTaille=v; }, false);
   bindChips("#drageesChips", function(v){ state.dragees=v; }, false);
+  var mt=$("#modeleTxt"); if(mt) mt.oninput=function(){state.modeleSouhaite=this.value};
   var ins=$("#inscr"); if(ins) ins.oninput=function(){state.inscription=this.value};
   var bq=$("#bouquetQte"); if(bq) bq.oninput=function(){state.bouquetQte=this.value};
   var pt=$("#persoTxt"); if(pt) pt.oninput=function(){state.perso=this.value};
@@ -531,7 +534,7 @@ function buildPayload(){
       reception:{ mode:state.reception, zone: state.reception==="livraison"?"Île-de-France (+20€)":null, code_postal: state.reception==="livraison"?$("#cp").value.trim():null } },
     prestations: state.prestations,
     details:{
-      gateau:{ type_gateau:state.typeGateau||null, saveurs:state.saveurs, type_number:state.typeNumber||null, ganache_number:state.ganacheNumber||null, decor:state.decorNumber||null, inscription:state.inscription||null },
+      gateau:{ type_gateau:state.typeGateau||null, modele_souhaite:state.modeleSouhaite||null, saveurs:state.saveurs, type_number:state.typeNumber||null, ganache_number:state.ganacheNumber||null, decor:state.decorNumber||null, inscription:state.inscription||null },
       gourmandises:{ quantite:state.quantite||null, parfums_cupcakes:state.cupcakes, bouquet_nb_cupcakes:state.bouquetQte||null, plateau_fruits_taille:state.plateauTaille||null },
       decoration:{ personnalisation:state.perso||null, dragees:state.dragees||null },
       evenementiel:{ description:state.evenementTxt||null, adresse:state.adresseEvenement||null }
