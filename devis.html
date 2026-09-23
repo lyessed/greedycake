@@ -25,6 +25,12 @@
       --err:#E08a6f; --ok:#9db892; --shadow:rgba(0,0,0,.35);
     }
   }
+  :root[data-theme="dark"]{
+    --ground:#211913; --surface:#2B2119; --surface-2:#362A20; --card:#2C2219;
+    --ink:#F2E8DB; --ink-soft:#C4B4A2; --line:#3E3128; --line-2:#4a3a2c;
+    --gold:#D8AE52; --gold-soft:#E7C878; --choco:#EDDFCB; --sage:#A6B191;
+    --err:#E08a6f; --ok:#9db892; --shadow:rgba(0,0,0,.35);
+  }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--ground);color:var(--ink);font-family:"Jost",system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
   .wrap{max-width:760px;margin:0 auto;padding:38px 20px 70px}
@@ -127,9 +133,79 @@
 
   .footnote{text-align:center;color:var(--ink-soft);font-size:.76rem;margin-top:20px}
   .footnote a{color:var(--gold)}
+
+  /* --- header de site (partagé) --- */
+  header a{color:inherit;text-decoration:none}
+  .btn{display:inline-flex;align-items:center;gap:.55em;font-weight:500;font-size:.86rem;letter-spacing:.04em;padding:.85em 1.6em;border-radius:999px;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;border:1px solid transparent}
+  .btn-primary{background:var(--ink);color:var(--ground)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px var(--shadow)}
+  header{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--ground) 82%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+  header .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:74px}
+  header .brand{display:flex;align-items:center;margin:0}
+  .brand-logo{height:56px;width:56px;border-radius:50%;object-fit:cover;display:block;border:1px solid color-mix(in srgb,var(--gold) 45%,transparent)}
+  .nav-links{display:flex;gap:30px;font-size:.82rem;letter-spacing:.06em;color:var(--ink-soft);align-items:center}
+  .nav-links > a{position:relative;padding:4px 0;color:var(--ink-soft)}
+  .nav-links > a:hover{color:var(--ink)}
+  .nav-links > a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--gold);transition:width .25s}
+  .nav-links > a:hover::after{width:100%}
+  .nav-right{display:flex;align-items:center;gap:16px}
+  .themebtn,.iconbtn,.menubtn{background:none;border:1px solid var(--line);border-radius:999px;width:34px;height:34px;display:grid;place-items:center;cursor:pointer;color:var(--ink-soft)}
+  .themebtn:hover,.iconbtn:hover,.menubtn:hover{border-color:var(--gold);color:var(--gold)}
+  .iconbtn svg,.menubtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6}
+  .menubtn{display:none}
+  .mobile-nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--ground);border-bottom:1px solid var(--line);box-shadow:0 16px 30px var(--shadow);flex-direction:column;padding:6px 20px 14px;z-index:35}
+  .mobile-nav.open{display:flex}
+  .mobile-nav a{padding:13px 2px;border-bottom:1px solid var(--line);font-size:.98rem;color:var(--ink)}
+  .mobile-nav a:last-child{border-bottom:none}
+  @media(max-width:860px){.nav-links{display:none}.menubtn{display:grid}}
+  @media(max-width:480px){.brand-logo{height:42px;width:42px}.nav-right{gap:7px}.nav-right .btn{padding:.65em 1em;font-size:.76rem}.themebtn{display:none}}
+  .drop{position:relative}
+  .drop-t{background:none;border:none;font:inherit;color:var(--ink-soft);cursor:pointer;padding:4px 0;display:inline-flex;align-items:center;gap:5px;letter-spacing:.06em}
+  .drop-t:hover{color:var(--ink)}
+  .drop-menu{position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%) translateY(6px);background:var(--ground);border:1px solid var(--line);border-radius:14px;box-shadow:0 16px 30px var(--shadow);padding:8px;min-width:238px;display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .2s,transform .2s;z-index:40}
+  .drop:hover .drop-menu,.drop:focus-within .drop-menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+  .drop-menu a{padding:9px 12px;border-radius:9px;font-size:.84rem;color:var(--ink-soft);white-space:nowrap}
+  .drop-menu a:hover{background:var(--surface);color:var(--gold)}
 </style>
 </head>
 <body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="index.html" aria-label="Greedy Cake &amp; Events — accueil">
+      <img class="brand-logo" src="images/logo.png" width="712" height="748" alt="Greedy Cake &amp; Events">
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Accueil</a>
+      <div class="drop">
+        <button type="button" class="drop-t" aria-haspopup="true" aria-expanded="false">Prestations <span aria-hidden="true">▾</span></button>
+        <div class="drop-menu">
+          <a href="gateaux-personnalises.html">Gâteaux personnalisés</a>
+          <a href="gourmandises-sweet-tables.html">Gourmandises &amp; sweet tables</a>
+          <a href="decoration-evenements.html">Décoration d'événements</a>
+        </div>
+      </div>
+      <a href="index.html#savoir">Savoir-faire</a>
+      <a href="devis.html">Devis</a>
+    </nav>
+    <div class="nav-right">
+      <a class="iconbtn" href="https://www.instagram.com/greedy.cake_events/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+      <button class="themebtn" id="themebtn" aria-label="Changer de thème">☾</button>
+      <button class="menubtn" id="menubtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileNav"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <a href="devis.html" class="btn btn-primary">Demander un devis</a>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="index.html">Accueil</a>
+    <a href="gateaux-personnalises.html">Gâteaux personnalisés</a>
+    <a href="gourmandises-sweet-tables.html">Gourmandises &amp; sweet tables</a>
+    <a href="decoration-evenements.html">Décoration d'événements</a>
+    <a href="index.html#savoir">Savoir-faire</a>
+    <a href="devis.html">Devis</a>
+  </nav>
+</header>
+
 <div class="wrap">
   <div class="head">
     <a class="brand" href="index.html">Greedy Cake &amp; Events</a>
@@ -565,6 +641,18 @@ $("#submit").onclick=function(){
 };
 
 render();
+</script>
+<script>
+(function(){var root=document.documentElement, tb=document.getElementById('themebtn');
+function cur(){try{return localStorage.getItem('gc-theme')}catch(e){return null}}
+function setT(t){root.setAttribute('data-theme',t);tb.textContent=t==='dark'?'☀':'☾';try{localStorage.setItem('gc-theme',t)}catch(e){}}
+var saved=cur(); if(saved){setT(saved)} else {tb.textContent=matchMedia('(prefers-color-scheme: dark)').matches?'☀':'☾'}
+tb.addEventListener('click',function(){var now=root.getAttribute('data-theme'); if(!now){now=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'} setT(now==='dark'?'light':'dark');});})();
+(function(){var btn=document.getElementById('menubtn'), nav=document.getElementById('mobileNav'); if(!btn||!nav) return;
+function close(){nav.classList.remove('open');btn.setAttribute('aria-expanded','false');}
+btn.addEventListener('click',function(){var open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false');});
+nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
+addEventListener('resize',function(){if(innerWidth>860) close();});})();
 </script>
 </body>
 </html>
