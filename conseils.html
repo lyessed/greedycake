@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Décoration d'événements sur-mesure en Île-de-France : baby shower, anniversaire à thème, fiançailles, arches de ballons. Style bohème chic. Devis gratuit.">
-<title>Décoration & organisation d'événements à Drancy (93) – Greedy Cake</title>
-<link rel="canonical" href="https://www.greedycakeevents.fr/decoration-evenements.html">
+<meta name="description" content="Nos conseils et astuces pour réussir vos gâteaux et événements : découpe, choix des parfums, idées de thèmes. Par Greedy Cake &amp; Events, Drancy (93).">
+<title>Conseils & astuces pâtisserie – Greedy Cake &amp; Events</title>
+<link rel="canonical" href="https://www.greedycakeevents.fr/conseils.html">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -13,17 +13,16 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Greedy Cake &amp; Events">
 <meta property="og:locale" content="fr_FR">
-<meta property="og:title" content="Décoration &amp; organisation d&#x27;événements à Drancy (93) – Greedy Cake">
-<meta property="og:description" content="Décoration d&#x27;événements sur-mesure en Île-de-France : baby shower, anniversaire à thème, fiançailles, arches de ballons. Style bohème chic. Devis gratuit.">
-<meta property="og:url" content="https://www.greedycakeevents.fr/decoration-evenements.html">
+<meta property="og:title" content="Conseils & astuces pâtisserie – Greedy Cake &amp; Events">
+<meta property="og:description" content="Nos conseils et astuces pour réussir vos gâteaux et événements : découpe, choix des parfums, idées de thèmes. Par Greedy Cake &amp; Events, Drancy (93).">
+<meta property="og:url" content="https://www.greedycakeevents.fr/conseils.html">
 <meta property="og:image" content="https://www.greedycakeevents.fr/images/og-cover.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Décoration &amp; organisation d&#x27;événements à Drancy (93) – Greedy Cake">
-<meta name="twitter:description" content="Décoration d&#x27;événements sur-mesure en Île-de-France : baby shower, anniversaire à thème, fiançailles, arches de ballons. Style bohème chic. Devis gratuit.">
+<meta name="twitter:title" content="Conseils & astuces pâtisserie – Greedy Cake &amp; Events">
+<meta name="twitter:description" content="Nos conseils et astuces pour réussir vos gâteaux et événements : découpe, choix des parfums, idées de thèmes. Par Greedy Cake &amp; Events, Drancy (93).">
 <meta name="twitter:image" content="https://www.greedycakeevents.fr/images/og-cover.jpg">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,400;1,500&family=Dancing+Script:wght@500;600;700&family=Jost:wght@300;400;500&display=swap">
@@ -211,7 +210,8 @@
 
   /* cartes "Nos prestations" */
   a.card{display:block}
-  .card.presta-card .ph img{object-fit:cover}
+  .card.presta-card .ph{height:230px;background:var(--surface)}
+  .card.presta-card .ph img{object-fit:contain}
 
   /* menu deroulant Prestations */
   .drop{position:relative}
@@ -222,28 +222,14 @@
   .drop-menu a{padding:9px 12px;border-radius:9px;font-size:.84rem;color:var(--ink-soft);white-space:nowrap}
   .drop-menu a::after{display:none}
   .drop-menu a:hover{background:var(--surface);color:var(--gold)}
-
-  /* pages prestations */
-  .presta-hero{padding:68px 0 8px;background:var(--surface)}
-  .presta-hero h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:clamp(2rem,4.4vw,3rem);line-height:1.1;margin-top:14px;text-wrap:balance;max-width:24ch}
-  .presta-hero .lead{color:var(--ink-soft);margin-top:16px;max-width:66ch;font-size:1.04rem}
-  .presta-hero .btn{margin-top:26px}
-  .presta{padding:52px 0}
-  .presta .feats{list-style:none;display:grid;gap:16px;max-width:76ch}
-  .presta .feats li{position:relative;padding-left:24px;color:var(--ink-soft)}
-  .presta .feats li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--gold)}
-  .presta .feats li strong{color:var(--ink);font-weight:500}
-  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:42px;align-items:start}
-  .gallery figure{margin:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface)}
-  .gallery img{width:100%;height:auto;display:block}
-  @media(max-width:820px){.gallery{grid-template-columns:1fr 1fr}}
-  @media(max-width:520px){.gallery{grid-template-columns:1fr}}
-  .presta .closing{margin-top:34px;color:var(--ink-soft);max-width:66ch}
-  .presta-cta{margin-top:30px}
-  .also{background:var(--surface);border-top:1px solid var(--line)}
   a.card{display:block}
   .card.presta-card .ph{height:230px;background:var(--surface)}
   .card.presta-card .ph img{object-fit:contain}
+
+  .presta-hero{padding:68px 0 8px;background:var(--surface)}
+  .presta-hero h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:clamp(2rem,4.4vw,3rem);line-height:1.1;margin-top:14px;text-wrap:balance;max-width:24ch}
+  .presta-hero .lead{color:var(--ink-soft);margin-top:16px;max-width:66ch;font-size:1.04rem}
+  .listing{padding:52px 0}
 </style>
 </head>
 <body>
@@ -287,40 +273,19 @@
 
 <section class="presta-hero">
   <div class="wrap">
-    <span class="eyebrow">L'événementiel</span>
-    <h1>Décoration & organisation d'événements en Île-de-France</h1>
-    <p class="lead">Au-delà de la pâtisserie, Greedy Cake &amp; Events met en scène vos plus beaux moments. De la table dressée à la décoration complète, nous créons une ambiance sur-mesure, dans un esprit bohème chic et élégant, à Drancy et dans toute l'Île-de-France.</p>
-    <a href="devis.html" class="btn btn-primary">Parler de mon événement</a>
+    <span class="eyebrow">Conseils</span>
+    <h1>Nos conseils &amp; astuces</h1>
+    <p class="lead">Nos petits secrets de pâtissière et nos idées pour réussir vos gâteaux et vos événements. De la découpe au choix des parfums, on partage ici ce qui fait la différence.</p>
   </div>
 </section>
 
-<section class="presta">
+<section class="listing">
   <div class="wrap">
-    <ul class="feats">
-      <li><strong>Anniversaires à thème :</strong> décor personnalisé selon l'univers de votre choix (princesse, super-héros, bohème…), arches de ballons et backdrops au prénom.</li>
-      <li><strong>Baby showers &amp; gender reveals :</strong> tables dressées, arches et décors tendres pour accueillir bébé.</li>
-      <li><strong>Soirées pyjama &amp; teepees :</strong> pour les enfants, un décor cosy avec tentes, guirlandes lumineuses et petits plateaux.</li>
-      <li><strong>Fiançailles &amp; réceptions :</strong> coins photo, arches fleuries et mises en table raffinées.</li>
-    </ul>
-    <div class="gallery">
-      <figure><img src="images/anniversaire-theme-princesse.jpg" width="1096" height="1435" alt="Décoration anniversaire à thème princesse avec arche de ballons" loading="lazy"></figure>
-      <figure><img src="images/decoration-baby-shower.jpg" width="1086" height="1448" alt="Décoration baby shower thème nounours, tables dressées" loading="lazy"></figure>
-      <figure><img src="images/decoration-soiree-pyjama-teepee.jpg" width="1086" height="1448" alt="Décoration soirée pyjama avec tentes teepee et guirlandes lumineuses" loading="lazy"></figure>
-      <figure><img src="images/arche-ballons-personnalisee.jpg" width="1600" height="1529" alt="Arche florale et ballons personnalisée avec prénom" loading="lazy"></figure>
-      <figure><img src="images/table-dressee-boheme.jpg" width="883" height="1600" alt="Table dressée bohème avec vaisselle dorée et fleurs" loading="lazy"></figure>
-      <figure><img src="images/coin-fiancailles-love.jpg" width="1240" height="1269" alt="Espace fiançailles bohème avec fauteuils en rotin et arche fleurie" loading="lazy"></figure>
-    </div>
-    <p class="closing">Chaque décoration est pensée avec vous, selon votre thème, vos couleurs et votre lieu.</p>
-    <div class="presta-cta"><a href="devis.html" class="btn btn-primary">Parler de mon événement</a></div>
-  </div>
-</section>
-
-<section class="also">
-  <div class="wrap">
-    <div class="sec-head"><span class="eyebrow">Découvrez aussi</span><h2>Nos autres prestations</h2></div>
     <div class="cards">
-      <a class="card presta-card" href="gateaux-personnalises.html"><div class="ph"><img src="images/gateau-layer-cake-anniversaire.jpg" width="1254" height="1254" alt="Layer cake rose personnalisé pour anniversaire" loading="lazy"></div><div class="body"><h3>Gâteaux personnalisés</h3><p>Layer cakes, number cakes &amp; pièces montées sur-mesure.</p></div></a>
-      <a class="card presta-card" href="gourmandises-sweet-tables.html"><div class="ph"><img src="images/bouquet-cupcakes.jpg" width="1254" height="1254" alt="Bouquet de cupcakes crème façon roses" loading="lazy"></div><div class="body"><h3>Gourmandises &amp; sweet tables</h3><p>Bouquets de cupcakes, plateaux de fruits &amp; dragées.</p></div></a>
+      <a class="card presta-card" href="blog/couper-layer-cake.html">
+        <div class="ph"><img src="images/blog-couper-layer-cake.jpg" width="843" height="1264" alt="Infographie : comment couper un layer cake en 4 étapes" loading="lazy"></div>
+        <div class="body"><h3>Comment couper un layer cake</h3><p>La méthode simple pour des parts régulières et gourmandes.</p></div>
+      </a>
     </div>
   </div>
 </section>
@@ -351,7 +316,7 @@
     </div>
     <div class="foot-bottom">
       <span>© 2026 Greedy Cake &amp; Events — Micro-entreprise</span>
-      <span><a href="mentions-legales.html">Mentions légales</a> · <a href="confidentialite.html">Politique de confidentialité</a></span>
+      <span><a href="conseils.html">Conseils</a> · <a href="mentions-legales.html">Mentions légales</a> · <a href="confidentialite.html">Politique de confidentialité</a></span>
     </div>
   </div>
 </footer>
