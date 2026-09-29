@@ -249,6 +249,13 @@
   .article .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin:30px 0 6px}
   .article .back{display:inline-block;margin-top:26px;color:var(--ink-soft);font-size:.9rem}
   .article .back:hover{color:var(--gold)}
+  /* zoom image (lightbox) */
+  .article .hero-img{cursor:zoom-in}
+  .lightbox{position:fixed;inset:0;z-index:100;background:rgba(20,14,9,.92);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+  .lightbox.open{display:flex}
+  .lightbox img{max-width:min(1000px,96vw);max-height:92vh;width:auto;height:auto;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.5);cursor:default}
+  .lightbox .lb-close{position:absolute;top:18px;right:22px;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.3);color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;display:grid;place-items:center}
+  .lightbox .lb-close:hover{background:rgba(0,0,0,.55)}
 </style>
 </head>
 <body>
@@ -365,6 +372,25 @@ function close(){nav.classList.remove('open');btn.setAttribute('aria-expanded','
 btn.addEventListener('click',function(){var open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false');});
 nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
 addEventListener('resize',function(){if(innerWidth>860) close();});})();
+</script>
+<div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Image agrandie">
+  <button class="lb-close" id="lbClose" aria-label="Fermer">×</button>
+  <img id="lbImg" src="" alt="">
+</div>
+<script>
+(function(){
+  var img=document.querySelector('.article .hero-img'),
+      lb=document.getElementById('lightbox'),
+      lbImg=document.getElementById('lbImg'),
+      closeBtn=document.getElementById('lbClose');
+  if(!img||!lb) return;
+  function open(){ lbImg.src=img.currentSrc||img.src; lbImg.alt=img.alt; lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function shut(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+  img.addEventListener('click',open);
+  lb.addEventListener('click',function(e){ if(e.target!==lbImg) shut(); });
+  closeBtn.addEventListener('click',shut);
+  addEventListener('keydown',function(e){ if(e.key==='Escape') shut(); });
+})();
 </script>
 </body>
 </html>
