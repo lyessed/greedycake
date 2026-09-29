@@ -245,6 +245,13 @@
   a.card{display:block}
   .card.presta-card .ph{height:230px;background:var(--surface)}
   .card.presta-card .ph img{object-fit:contain}
+  /* zoom photos galerie (lightbox) */
+  .gallery img{cursor:zoom-in}
+  .lightbox{position:fixed;inset:0;z-index:100;background:rgba(20,14,9,.92);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+  .lightbox.open{display:flex}
+  .lightbox img{max-width:min(1100px,96vw);max-height:92vh;width:auto;height:auto;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.5);cursor:default}
+  .lightbox .lb-close{position:absolute;top:18px;right:22px;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.3);color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;display:grid;place-items:center}
+  .lightbox .lb-close:hover{background:rgba(0,0,0,.55)}
 </style>
 </head>
 <body>
@@ -368,6 +375,25 @@ function close(){nav.classList.remove('open');btn.setAttribute('aria-expanded','
 btn.addEventListener('click',function(){var open=nav.classList.toggle('open');btn.setAttribute('aria-expanded',open?'true':'false');});
 nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close);});
 addEventListener('resize',function(){if(innerWidth>860) close();});})();
+</script>
+<div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Photo agrandie">
+  <button class="lb-close" id="lbClose" aria-label="Fermer">×</button>
+  <img id="lbImg" src="" alt="">
+</div>
+<script>
+(function(){
+  var imgs=document.querySelectorAll('.gallery img'),
+      lb=document.getElementById('lightbox'),
+      lbImg=document.getElementById('lbImg'),
+      closeBtn=document.getElementById('lbClose');
+  if(!imgs.length||!lb) return;
+  function open(src,alt){ lbImg.src=src; lbImg.alt=alt||''; lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function shut(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+  imgs.forEach(function(im){ im.addEventListener('click',function(){ open(im.currentSrc||im.src, im.alt); }); });
+  lb.addEventListener('click',function(e){ if(e.target!==lbImg) shut(); });
+  closeBtn.addEventListener('click',shut);
+  addEventListener('keydown',function(e){ if(e.key==='Escape') shut(); });
+})();
 </script>
 </body>
 </html>
