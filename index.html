@@ -249,6 +249,19 @@
   a.card{display:block}
   .card.presta-card .ph{height:230px;background:var(--surface)}
   .card.presta-card .ph img{object-fit:contain}
+  /* === Galerie "Nos réalisations" === */
+  .real-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .real-grid figure{margin:0;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface);aspect-ratio:4/5;cursor:zoom-in}
+  .real-grid img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s ease}
+  .real-grid figure:hover img{transform:scale(1.04)}
+  @media(max-width:820px){.real-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.real-grid{grid-template-columns:1fr}}
+  /* zoom (lightbox) */
+  .lightbox{position:fixed;inset:0;z-index:100;background:rgba(20,14,9,.92);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out}
+  .lightbox.open{display:flex}
+  .lightbox img{max-width:min(1100px,96vw);max-height:92vh;width:auto;height:auto;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.5);cursor:default}
+  .lightbox .lb-close{position:absolute;top:18px;right:22px;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.3);color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;display:grid;place-items:center}
+  .lightbox .lb-close:hover{background:rgba(0,0,0,.55)}
 </style>
 </head>
 <body>
@@ -269,6 +282,7 @@
         </div>
       </div>
       <a href="#savoir">Savoir-faire</a>
+      <a href="#realisations">Réalisations</a>
       <a href="conseils.html">Conseils</a>
       <a href="devis.html">Devis</a>
     </nav>
@@ -285,6 +299,7 @@
     <a href="gourmandises-sweet-tables.html">Gourmandises &amp; sweet tables</a>
     <a href="decoration-evenements.html">Décoration d'événements</a>
     <a href="#savoir">Savoir-faire</a>
+    <a href="#realisations">Réalisations</a>
     <a href="conseils.html">Conseils</a>
     <a href="devis.html">Devis</a>
   </nav>
@@ -343,6 +358,33 @@
       <article class="card"><div class="ph p4"><img src="images/creations/p4-bouquet-cupcakes.jpg" alt="Bouquet de cupcakes fleuris" loading="lazy"></div><div class="body"><h3>Cupcakes et Bouquet de Cupcakes</h3><p>Un bouquet 100 % gourmand, aussi joli qu'un vrai. Parfait à offrir.</p></div></article>
       <article class="card"><div class="ph p5"><img src="images/creations/p5-plateau-fruits.jpg" alt="Plateau de fruits frais pour buffet" loading="lazy"></div><div class="body"><h3>Plateaux de fruits</h3><p>Compositions fraîches et généreuses pour vos buffets et tables sucrées.</p></div></article>
       <article class="card"><div class="ph p6"><img src="images/creations/p6-dragees.jpg" alt="Dragées et étiquettes personnalisées" loading="lazy"></div><div class="body"><h3>Dragées &amp; Etiquettes Perso</h3><p>Boîtes de dragées et bonbons avec étiquettes personnalisées à votre nom.</p></div></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     NOS RÉALISATIONS — galerie / portfolio de vraies créations
+     --------------------------------------------------------------
+     POUR AJOUTER UNE PHOTO (3 étapes, 2 min) :
+       1) Optimise ta photo (JPG, ~1200px de large max, < 360 Ko)
+          puis dépose-la dans :  images/realisations/
+       2) Copie-colle UN bloc <figure>…</figure> ci-dessous
+       3) Mets à jour  src="images/realisations/TON-FICHIER.jpg",
+          width/height (dimensions réelles de la photo),
+          et  alt="Description précise + Greedy Cake + ville"
+     La photo s'affiche en grand au clic, rien d'autre à faire.
+     ============================================================ -->
+<section class="creations" id="realisations">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Portfolio</span>
+      <h2>Nos réalisations</h2>
+      <p>Un aperçu de créations réalisées pour nos clients à Drancy et en Île-de-France.</p>
+    </div>
+    <div class="real-grid">
+      <figure><img src="images/realisations/layer-cake-arc-en-ciel-assya.jpg" width="1254" height="1254" alt="Layer cake arc-en-ciel pastel personnalisé « Assya » — Greedy Cake, Drancy (93)" loading="lazy"></figure>
+      <figure><img src="images/realisations/tarte-figues-framboises.jpg" width="1145" height="1374" alt="Tarte aux figues fraîches et framboises, pâtisserie sur-mesure — Greedy Cake, Île-de-France" loading="lazy"></figure>
+      <figure><img src="images/realisations/gateau-anniversaire-football.jpg" width="1145" height="1374" alt="Gâteau d'anniversaire thème football « Happy Birthday » — Greedy Cake & Events, Drancy (93)" loading="lazy"></figure>
     </div>
   </div>
 </section>
@@ -523,6 +565,25 @@
   });
   nav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', close); });
   addEventListener('resize', function(){ if(innerWidth>860) close(); });
+})();
+</script>
+<div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Photo agrandie">
+  <button class="lb-close" id="lbClose" aria-label="Fermer">×</button>
+  <img id="lbImg" src="" alt="">
+</div>
+<script>
+(function(){
+  var imgs=document.querySelectorAll('.real-grid img'),
+      lb=document.getElementById('lightbox'),
+      lbImg=document.getElementById('lbImg'),
+      closeBtn=document.getElementById('lbClose');
+  if(!imgs.length||!lb) return;
+  function open(src,alt){ lbImg.src=src; lbImg.alt=alt||''; lb.classList.add('open'); lb.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+  function shut(){ lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+  imgs.forEach(function(im){ im.addEventListener('click',function(){ open(im.currentSrc||im.src, im.alt); }); });
+  lb.addEventListener('click',function(e){ if(e.target!==lbImg) shut(); });
+  closeBtn.addEventListener('click',shut);
+  addEventListener('keydown',function(e){ if(e.key==='Escape') shut(); });
 })();
 </script>
 </body>
