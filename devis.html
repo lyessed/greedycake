@@ -325,10 +325,20 @@
         <div class="err-msg">Adresse e-mail non valide.</div>
       </div>
       <div class="field">
+        <label class="lbl">Régime particulier <span class="opt">(facultatif)</span></label>
+        <div class="chips" id="regimesChips">
+          <div class="chip" data-v="Sans gluten">Sans gluten</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="lbl" for="allergies">Allergies <span class="opt">(facultatif)</span></label>
+        <input type="text" id="allergies" name="allergies" placeholder="Ex : fruits à coque, œuf, lactose…">
+      </div>
+      <div class="allergy-note"><span class="ok" aria-hidden="true">✓</span><span>Tous nos gâteaux sont <b>sans alcool</b> et avec <b>gélatine halal</b>.</span></div>
+      <div class="field">
         <label class="lbl" for="remarques">Remarques complémentaires <span class="opt">(facultatif)</span></label>
         <textarea id="remarques" name="remarques" placeholder="Un thème, des couleurs, une idée en tête…"></textarea>
       </div>
-      <div class="allergy-note"><span class="ok" aria-hidden="true">✓</span><span>Tous nos gâteaux sont <b>sans alcool</b> et avec <b>gélatine halal</b>.</span></div>
       <div class="field" data-req="consent">
         <label class="consent"><input type="checkbox" id="consent">
           <span>J'accepte que mes données soient utilisées pour traiter ma demande, conformément à la <a href="confidentialite.html" target="_blank" rel="noopener">politique de confidentialité</a>.</span></label>
@@ -642,7 +652,7 @@ function buildPayload(){
       decoration:{ personnalisation:state.perso||null, dragees:state.dragees||null },
       evenementiel:{ description:state.evenementTxt||null, adresse:state.adresseEvenement||null }
     },
-    contraintes:{ regimes:state.regimes },
+    contraintes:{ regimes:state.regimes, allergies:$("#allergies").value.trim()||null },
     inspiration:{ fichier:state.file||null },
     contact:{ prenom:$("#prenom").value.trim(), nom:$("#nom").value.trim(),
       telephone:$("#tel").value.trim(), email:$("#email").value.trim(), remarques:$("#remarques").value.trim()||null },
@@ -669,6 +679,7 @@ $("#submit").onclick=function(){
 };
 
 render();
+bindChips("#regimesChips", null, true, "regimes");
 </script>
 <script>
 (function(){var root=document.documentElement, tb=document.getElementById('themebtn');
