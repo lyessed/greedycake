@@ -262,6 +262,16 @@
   .lightbox img{max-width:min(1100px,96vw);max-height:92vh;width:auto;height:auto;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.5);cursor:default}
   .lightbox .lb-close{position:absolute;top:18px;right:22px;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.3);color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;display:grid;place-items:center}
   .lightbox .lb-close:hover{background:rgba(0,0,0,.55)}
+  /* === Bandeau de réassurance (sous le hero) === */
+  .reassure{background:var(--surface-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .reassure-inner{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 20px;padding:16px 28px;font-family:"Jost",sans-serif;font-weight:500;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--choco);text-align:center}
+  .reassure-item{display:inline-flex;align-items:center;gap:.5em;white-space:nowrap}
+  .reassure-ico{font-size:1.05rem;line-height:1}
+  .reassure-sep{color:var(--gold);opacity:.85}
+  @media(max-width:620px){
+    .reassure-inner{flex-direction:column;gap:9px;padding:15px 18px;font-size:.78rem;letter-spacing:.1em}
+    .reassure-sep{display:none}
+  }
 </style>
 </head>
 <body>
@@ -327,6 +337,17 @@
     <div class="hero-loc">Anniversaire · Mariage ou Fiançailles · Baptême · Fête de naissance ou baby shower · Diplôme ou réussite scolaire · Départ en retraite · Faire plaisir ou se faire plaisir</div>
   </div>
   <div class="scroll-cue"><span>Découvrir</span><span class="dot"></span></div>
+</div>
+
+<!-- BANDEAU RÉASSURANCE -->
+<div class="reassure">
+  <div class="wrap reassure-inner">
+    <span class="reassure-item"><span class="reassure-ico" aria-hidden="true">🌿</span>100 % sans alcool</span>
+    <span class="reassure-sep" aria-hidden="true">·</span>
+    <span class="reassure-item">Gélatine halal</span>
+    <span class="reassure-sep" aria-hidden="true">·</span>
+    <span class="reassure-item">Fait maison à Drancy</span>
+  </div>
 </div>
 
 <!-- NOS PRESTATIONS -->
@@ -409,6 +430,7 @@
       <span class="eyebrow">Le savoir-faire</span>
       <blockquote>« Je crée des gâteaux et des décors comme je les rêverais pour mes propres fêtes : gourmands, soignés, et à votre image. »</blockquote>
       <p style="color:var(--ink-soft)">Artisan pâtissier &amp; conceptrice événementiel, je mets mon savoir-faire au service de vos plus beaux moments. Des ingrédients choisis, des finitions à la main, et un vrai échange pour que tout vous ressemble.</p>
+      <p style="color:var(--ink-soft);margin-top:12px">Toutes nos créations sont réalisées sans alcool (vanille et arômes sans alcool) et avec une gélatine certifiée halal.</p>
       <div class="signature">Greedy Cake &amp; Events</div>
       <div class="badges">
         <span class="badge">Fait maison</span>

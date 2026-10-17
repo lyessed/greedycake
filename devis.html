@@ -186,6 +186,10 @@
   .drop-menu::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
   .drop-menu a{padding:9px 12px;border-radius:9px;font-size:.84rem;color:var(--ink-soft);white-space:nowrap}
   .drop-menu a:hover{background:var(--surface);color:var(--gold)}
+  /* mention reassurance sans alcool / gelatine halal */
+  .allergy-note{display:flex;align-items:flex-start;gap:.6em;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:12px;padding:12px 14px;margin-bottom:22px;color:var(--ink-soft);font-size:.88rem;line-height:1.5}
+  .allergy-note .ok{color:var(--gold);font-weight:600;flex:none}
+  .allergy-note b{color:var(--ink);font-weight:500}
 </style>
 </head>
 <body>
@@ -324,6 +328,7 @@
         <label class="lbl" for="remarques">Remarques complémentaires <span class="opt">(facultatif)</span></label>
         <textarea id="remarques" name="remarques" placeholder="Un thème, des couleurs, une idée en tête…"></textarea>
       </div>
+      <div class="allergy-note"><span class="ok" aria-hidden="true">✓</span><span>Tous nos gâteaux sont <b>sans alcool</b> et avec <b>gélatine halal</b>.</span></div>
       <div class="field" data-req="consent">
         <label class="consent"><input type="checkbox" id="consent">
           <span>J'accepte que mes données soient utilisées pour traiter ma demande, conformément à la <a href="confidentialite.html" target="_blank" rel="noopener">politique de confidentialité</a>.</span></label>
