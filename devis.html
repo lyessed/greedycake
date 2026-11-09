@@ -121,6 +121,7 @@
   .consent input{margin-top:3px;width:18px;height:18px;accent-color:var(--gold);flex:none}
   .consent a{color:var(--gold)}
 
+  .field-help{color:var(--ink-soft);font-size:.82rem;margin-top:7px;line-height:1.45}
   .err-msg{color:var(--err);font-size:.8rem;margin-top:7px;display:none}
   .field.invalid .err-msg{display:block}
   .field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--err)}
@@ -295,6 +296,13 @@
       <p class="hint">On affine selon vos choix.</p>
       <div id="condHost"></div>
 
+      <div class="field" data-req="remarques">
+        <label class="lbl" for="remarques">Décrivez votre gâteau <span aria-hidden="true" style="color:var(--err)">*</span></label>
+        <textarea id="remarques" name="remarques" rows="4" required minlength="20" placeholder="Ex : Layer cake pour 20 personnes, thème licorne rose et doré, prénom “Inès” à écrire dessus, anniversaire 6 ans"></textarea>
+        <div class="field-help">Type de gâteau, nombre de personnes, thème / couleurs, inscription… Plus c’est précis, plus le devis sera juste 🤍</div>
+        <div class="err-msg">Merci de décrire votre gâteau en quelques mots, 20 caractères minimum</div>
+      </div>
+
 
     </div>
 
@@ -335,10 +343,6 @@
         <input type="text" id="allergies" name="allergies" placeholder="Ex : fruits à coque, œuf, lactose…">
       </div>
       <div class="allergy-note"><span class="ok" aria-hidden="true">✓</span><span>Tous nos gâteaux sont <b>sans alcool</b> et avec <b>gélatine halal</b>.</span></div>
-      <div class="field">
-        <label class="lbl" for="remarques">Remarques complémentaires <span class="opt">(facultatif)</span></label>
-        <textarea id="remarques" name="remarques" placeholder="Un thème, des couleurs, une idée en tête…"></textarea>
-      </div>
       <div class="field" data-req="consent">
         <label class="consent"><input type="checkbox" id="consent">
           <span>J'accepte que mes données soient utilisées pour traiter ma demande, conformément à la <a href="confidentialite.html" target="_blank" rel="noopener">politique de confidentialité</a>.</span></label>
@@ -585,10 +589,15 @@ function validateStep(n){
     else if(req==="nom"){ valid = $("#nom").value.trim().length>0; }
     else if(req==="tel"){ valid = reFR.test($("#tel").value.trim()); }
     else if(req==="email"){ valid = reMail.test($("#email").value.trim()); }
+    else if(req==="remarques"){ valid = $("#remarques").value.trim().length>=20; }
     else if(req==="consent"){ valid = $("#consent").checked; }
     if(valid){ clearErr(f); } else { setErr(f); if(!first)first=f; ok=false; }
   });
-  if(first) first.scrollIntoView({behavior:"smooth",block:"center"});
+  if(first){
+    first.scrollIntoView({behavior:"smooth",block:"center"});
+    var fc=first.querySelector("input,textarea,select");
+    if(fc){ try{ fc.focus({preventScroll:true}); }catch(e){ fc.focus(); } }
+  }
   return ok;
 }
 // nettoyer l'erreur en direct
@@ -596,6 +605,8 @@ function validateStep(n){
   var el=$("#"+id); if(el) el.addEventListener("input",function(){clearErr(el.closest(".field"))});
 });
 $("#consent").addEventListener("change",function(){clearErr(this.closest(".field"))});
+var _rq=$("#remarques");
+if(_rq) _rq.addEventListener("input",function(){ if(this.value.trim().length>=20) clearErr(this.closest(".field")); });
 
 /* ---------- Navigation ---------- */
 function render(){
@@ -662,6 +673,8 @@ function buildPayload(){
 $("#submit").onclick=function(){
   if($('input[name="website"]').value){ return; } // honeypot rempli = bot -> on ignore
   if(!validateStep(4))return;
+  // garde-fou : la description du gâteau (étape 3) doit rester valide
+  if($("#remarques").value.trim().length<20){ cur=3; render(); validateStep(3); return; }
   var btn=this; btn.classList.add("loading"); btn.disabled=true;
   $(".submit-tx",btn).textContent="Envoi…";
   var payload=buildPayload();
