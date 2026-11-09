@@ -477,8 +477,6 @@ function buildStep3(){
          SAVEURS.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
       h+='<div class="field"><label class="lbl">Option <span class="opt">(facultatif)</span></label><div class="chips" id="optionGateauChips">'+
          OPTIONS_GATEAU.map(function(o){return '<div class="chip" data-v="'+o+'">'+o+'</div>'}).join("")+'</div></div>';
-      h+='<div class="field"><label class="lbl" for="modeleTxt">Modèle souhaité <span class="opt">(thème, couleurs…)</span></label>'+
-         '<textarea id="modeleTxt" rows="3" placeholder="Ex : Gâteau licorne, couleurs pastel rose et violet, avec des étoiles dorées…"></textarea></div>';
     }
     if(isNumber){
       h+='<div class="field"><label class="lbl">Type</label><div class="chips" id="typeNumberChips">'+
@@ -542,7 +540,6 @@ function buildStep3(){
   bindChips("#plateauChips", function(v){ state.plateauTaille=v; }, false);
   bindChips("#drageesChips", function(v){ state.dragees=v; }, false);
   bindChips("#optionGateauChips", function(v){ state.optionGateau=v; }, false);
-  var mt=$("#modeleTxt"); if(mt) mt.oninput=function(){state.modeleSouhaite=this.value};
   var ins=$("#inscr"); if(ins) ins.oninput=function(){state.inscription=this.value};
   var bq=$("#bouquetQte"); if(bq) bq.oninput=function(){state.bouquetQte=this.value};
   var pt=$("#persoTxt"); if(pt) pt.oninput=function(){state.perso=this.value};
