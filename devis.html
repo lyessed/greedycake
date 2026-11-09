@@ -83,6 +83,13 @@
     width:100%;font-family:inherit;font-size:.95rem;color:var(--ink);background:var(--ground);
     border:1px solid var(--line-2);border-radius:12px;padding:13px 14px;transition:border-color .2s,box-shadow .2s}
   input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 20%,transparent)}
+  /* bouton natif d'ouverture du calendrier : visible et cliquable dans les deux thèmes */
+  input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.85;padding:2px;border-radius:5px}
+  input[type=date]::-webkit-calendar-picker-indicator:hover{opacity:1;background:color-mix(in srgb,var(--gold) 22%,transparent)}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1)}
+  }
+  :root[data-theme="dark"] input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1)}
   textarea{min-height:90px;resize:vertical}
 
   /* Cartes sélectionnables */
@@ -121,6 +128,7 @@
   .consent input{margin-top:3px;width:18px;height:18px;accent-color:var(--gold);flex:none}
   .consent a{color:var(--gold)}
 
+  .field-help{color:var(--ink-soft);font-size:.82rem;margin-top:7px;line-height:1.45}
   .err-msg{color:var(--err);font-size:.8rem;margin-top:7px;display:none}
   .field.invalid .err-msg{display:block}
   .field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--err)}
@@ -295,6 +303,13 @@
       <p class="hint">On affine selon vos choix.</p>
       <div id="condHost"></div>
 
+      <div class="field" data-req="remarques">
+        <label class="lbl" id="remarquesLabel" for="remarques">Décrivez votre commande <span aria-hidden="true" style="color:var(--err)">*</span></label>
+        <textarea id="remarques" name="remarques" rows="4" required minlength="20" placeholder="Ex : Layer cake pour 20 personnes, thème licorne rose et doré, prénom “Inès” à écrire dessus… ou 24 cupcakes vanille-fraise pour un baby shower"></textarea>
+        <div class="field-help" id="remarquesHelp">Type de création, quantité ou nombre de personnes, thème / couleurs, occasion… Plus c’est précis, plus le devis sera juste 🤍</div>
+        <div class="err-msg">Merci de décrire votre commande en quelques mots (20 caractères minimum)</div>
+      </div>
+
 
     </div>
 
@@ -335,10 +350,6 @@
         <input type="text" id="allergies" name="allergies" placeholder="Ex : fruits à coque, œuf, lactose…">
       </div>
       <div class="allergy-note"><span class="ok" aria-hidden="true">✓</span><span>Tous nos gâteaux sont <b>sans alcool</b> et avec <b>gélatine halal</b>.</span></div>
-      <div class="field">
-        <label class="lbl" for="remarques">Remarques complémentaires <span class="opt">(facultatif)</span></label>
-        <textarea id="remarques" name="remarques" placeholder="Un thème, des couleurs, une idée en tête…"></textarea>
-      </div>
       <div class="field" data-req="consent">
         <label class="consent"><input type="checkbox" id="consent">
           <span>J'accepte que mes données soient utilisées pour traiter ma demande, conformément à la <a href="confidentialite.html" target="_blank" rel="noopener">politique de confidentialité</a>.</span></label>
@@ -400,6 +411,31 @@ var TYPES_GATEAU = ["Layer cake","Gâteau à thème","Pièce montée","Autre"];
 var TYPES_NUMBER = ["Number cake","Letter cake","Heart cake"];
 var DECORS_NUMBER = ["Fruits","Chocolats"];
 var GANACHES_NUMBER = ["Ganache chocolat blanc","Ganache chocolat Nutella"];
+/* Textes du champ de description, adaptés à la prestation choisie.
+   Les intitulés reprennent ceux déjà validés. */
+var DESCRIPTIONS = {
+  gateaux:      { titre:"Décrivez votre commande",
+                  ph:"Ex : Layer cake pour 20 personnes, thème licorne rose et doré, pour un anniversaire",
+                  aide:"Nombre de parts ou de personnes, couleurs, thème, occasion" },
+  number:       { titre:"Chiffre(s) ou lettre(s) souhaité(s)",
+                  ph:"Ex : 30 — number cake 20 parts, ganache chocolat blanc, couleurs or et blanc",
+                  aide:"Le chiffre ou la lettre à inscrire, le nombre de parts, le goût, les couleurs, le thème" },
+  gourmandises: { titre:"Décrivez votre commande",
+                  ph:"Ex : 24 cupcakes vanille-fraise pour un baby shower, couleurs pastel",
+                  aide:"Nombre de cupcakes, parfums, couleurs, occasion" },
+  bouquet:      { titre:"Nombre de cupcakes souhaités (pour le bouquet)",
+                  ph:"Ex : 24 cupcakes vanille-fraise, camaïeu de rose et blanc, pour un baby shower",
+                  aide:"Nombre de cupcakes pour le bouquet, parfums, couleurs, occasion" },
+  buffet:       { titre:"Décrivez-nous votre envie",
+                  ph:"Ex : Plateau de fruits pour 30 personnes — fraises, ananas, raisin, présenté en couronne",
+                  aide:"Nombre de personnes, fruits souhaités, présentation" },
+  evenementiel: { titre:"Décrivez votre envie (thème, couleurs, ambiance, nombre de personnes…)",
+                  ph:"Ex : Baby shower fille, thème nuages et étoiles pastel, environ 20 invités, je veux une table décorée avec arche florale…",
+                  aide:"Thème, couleurs, ambiance, nombre de personnes" },
+  deco:         { titre:"Texte de personnalisation (prénom, date, petit message…)",
+                  ph:"Ex : « Bienvenue bébé Lina — 12 juin », 30 boîtes, couleurs blanc et doré",
+                  aide:"Le texte à personnaliser, la quantité, les couleurs" }
+};
 var CUPCAKES = ["Nutella","Caramel beurre salé","Noix de coco","Fraises","Speculoos"];
 var QTES = ["Boîte de 6","Boîte de 12","Boîte de 24","Autre"];
 var PLATEAUX = ["Petit plateau","Moyen plateau","Grand plateau"];
@@ -473,8 +509,6 @@ function buildStep3(){
          SAVEURS.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
       h+='<div class="field"><label class="lbl">Option <span class="opt">(facultatif)</span></label><div class="chips" id="optionGateauChips">'+
          OPTIONS_GATEAU.map(function(o){return '<div class="chip" data-v="'+o+'">'+o+'</div>'}).join("")+'</div></div>';
-      h+='<div class="field"><label class="lbl" for="modeleTxt">Modèle souhaité <span class="opt">(thème, couleurs…)</span></label>'+
-         '<textarea id="modeleTxt" rows="3" placeholder="Ex : Gâteau licorne, couleurs pastel rose et violet, avec des étoiles dorées…"></textarea></div>';
     }
     if(isNumber){
       h+='<div class="field"><label class="lbl">Type</label><div class="chips" id="typeNumberChips">'+
@@ -483,7 +517,6 @@ function buildStep3(){
          GANACHES_NUMBER.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
       h+='<div class="field"><label class="lbl">Décor</label><div class="chips" id="decorNumberChips">'+
          DECORS_NUMBER.map(function(s){return '<div class="chip" data-v="'+s+'">'+s+'</div>'}).join("")+'</div></div>';
-      h+='<div class="field"><label class="lbl" for="inscr">Chiffre(s) ou lettre(s) souhaité(s) <span class="opt">(facultatif)</span></label><input type="text" id="inscr" placeholder="Ex : 30, ou les initiales A & M"></div>';
     }
     h+='</div>';
   }
@@ -497,7 +530,6 @@ function buildStep3(){
          '<div id="qteAutreWrap" style="display:none;margin-top:10px"><input type="text" id="qteAutre" placeholder="Indiquer le nombre de cupcakes souhaités"></div></div>';
     }
     if(state.prestations.indexOf("bouquet")>-1){
-      h+='<div class="field"><label class="lbl" for="bouquetQte">Nombre de cupcakes souhaités <span class="opt">(pour le bouquet)</span></label><input type="text" id="bouquetQte" placeholder="Ex : 24 cupcakes"></div>';
     }
     if(has("buffet")){
       h+='<div class="field"><label class="lbl">Taille du plateau de fruits</label><div class="chips" id="plateauChips">'+
@@ -509,19 +541,37 @@ function buildStep3(){
     h+='<div class="cond"><h4>Souvenirs</h4>'+
        '<div class="field"><label class="lbl">Avec ou sans dragées</label><div class="chips" id="drageesChips">'+
        DRAGEES_OPT.map(function(d){return '<div class="chip" data-v="'+d+'">'+d+'</div>'}).join("")+'</div></div>'+
-       '<div class="field"><label class="lbl" for="persoTxt">Texte de personnalisation <span class="opt">(prénom, date, petit message…)</span></label>'+
-       '<input type="text" id="persoTxt" placeholder="Ex : Bienvenue bébé Lina — 12 juin"></div></div>';
+       '</div>';
   }
   if(state.type==="evenementiel"){
     h+='<div class="cond"><h4>Votre projet de décoration</h4>'+
-       '<div class="field"><label class="lbl" for="evenementTxt">Décrivez votre envie <span class="opt">(thème, couleurs, ambiance, nombre de personnes…)</span></label>'+
-       '<textarea id="evenementTxt" rows="5" placeholder="Ex : Baby shower fille, thème nuages et étoiles pastel, environ 20 invités, je veux une table décorée avec arche florale…"></textarea></div>'+
        '<div class="field"><label class="lbl" for="adresseEvenement">Adresse de l\'événement</label>'+
        '<input type="text" id="adresseEvenement" placeholder="Ex : 12 rue des Lilas, 93700 Drancy"></div>'+
        '</div>';
   }
   if(!h){ h='<p class="hint" style="margin-bottom:0">Rien à personnaliser ici — passez à la suite 🙂</p>'; }
+  // sortir le champ de description du conteneur AVANT de le vider (sinon il serait détruit)
+  (function(){
+    var rem=$('.field[data-req="remarques"]'), host=$("#condHost");
+    if(rem && host && host.contains(rem)) host.parentNode.insertBefore(rem, host.nextSibling);
+  })();
   $("#condHost").innerHTML=h;
+
+  // placer le champ de description la ou se trouvait l'ancien champ selon le cas
+  (function(){
+    var rem=$('.field[data-req="remarques"]'), host=$("#condHost");
+    if(!rem||!host) return;
+    var addr=$("#adresseEvenement");
+    if(state.type==="evenementiel" && addr){
+      var champAdresse=addr.closest(".field");
+      champAdresse.parentNode.insertBefore(rem, champAdresse);   // juste avant l'adresse
+    }else if(host.nextSibling!==rem){
+      host.parentNode.insertBefore(rem, host.nextSibling);        // position d'origine
+    }
+  })();
+
+  // adapter l'intitulé / l'exemple / l'aide du champ de description à la prestation choisie
+  majChampDescription();
 
   // brancher les chips dynamiques
   bindChips("#typeGateauChips", function(v){ state.typeGateau=v; }, false);
@@ -538,12 +588,27 @@ function buildStep3(){
   bindChips("#plateauChips", function(v){ state.plateauTaille=v; }, false);
   bindChips("#drageesChips", function(v){ state.dragees=v; }, false);
   bindChips("#optionGateauChips", function(v){ state.optionGateau=v; }, false);
-  var mt=$("#modeleTxt"); if(mt) mt.oninput=function(){state.modeleSouhaite=this.value};
-  var ins=$("#inscr"); if(ins) ins.oninput=function(){state.inscription=this.value};
-  var bq=$("#bouquetQte"); if(bq) bq.oninput=function(){state.bouquetQte=this.value};
-  var pt=$("#persoTxt"); if(pt) pt.oninput=function(){state.perso=this.value};
-  var et=$("#evenementTxt"); if(et) et.oninput=function(){state.evenementTxt=this.value};
   var ae=$("#adresseEvenement"); if(ae) ae.oninput=function(){state.adresseEvenement=this.value};
+}
+function majChampDescription(){
+  var lbl=$("#remarquesLabel"), ta=$("#remarques"), help=$("#remarquesHelp");
+  if(!lbl||!ta||!help) return;
+  var sel=state.prestations.filter(function(k){ return DESCRIPTIONS[k]; });
+  var cfg;
+  if(state.type==="evenementiel"){
+    cfg=DESCRIPTIONS.evenementiel;
+  }else if(sel.length===1){
+    cfg=DESCRIPTIONS[sel[0]];
+  }else{
+    var aides=sel.map(function(k){ return DESCRIPTIONS[k].aide; });
+    cfg={ titre:"Décrivez votre commande",
+          ph:"Ex : Layer cake pour 20 personnes, thème licorne rose et doré, pour un anniversaire",
+          aide: aides.length ? aides.join(" · ")
+                             : "Type de création, quantité ou nombre de personnes, thème / couleurs, occasion" };
+  }
+  lbl.innerHTML = cfg.titre + ' <span aria-hidden="true" style="color:var(--err)">*</span>';
+  ta.setAttribute("placeholder", cfg.ph);
+  help.textContent = cfg.aide + "… Plus c’est précis, plus le devis sera juste 🤍";
 }
 function bindChips(sel, single, multi, key){
   var host=$(sel); if(!host)return;
@@ -585,10 +650,15 @@ function validateStep(n){
     else if(req==="nom"){ valid = $("#nom").value.trim().length>0; }
     else if(req==="tel"){ valid = reFR.test($("#tel").value.trim()); }
     else if(req==="email"){ valid = reMail.test($("#email").value.trim()); }
+    else if(req==="remarques"){ valid = $("#remarques").value.trim().length>=20; }
     else if(req==="consent"){ valid = $("#consent").checked; }
     if(valid){ clearErr(f); } else { setErr(f); if(!first)first=f; ok=false; }
   });
-  if(first) first.scrollIntoView({behavior:"smooth",block:"center"});
+  if(first){
+    first.scrollIntoView({behavior:"smooth",block:"center"});
+    var fc=first.querySelector("input,textarea,select");
+    if(fc){ try{ fc.focus({preventScroll:true}); }catch(e){ fc.focus(); } }
+  }
   return ok;
 }
 // nettoyer l'erreur en direct
@@ -596,6 +666,8 @@ function validateStep(n){
   var el=$("#"+id); if(el) el.addEventListener("input",function(){clearErr(el.closest(".field"))});
 });
 $("#consent").addEventListener("change",function(){clearErr(this.closest(".field"))});
+var _rq=$("#remarques");
+if(_rq) _rq.addEventListener("input",function(){ if(this.value.trim().length>=20) clearErr(this.closest(".field")); });
 
 /* ---------- Navigation ---------- */
 function render(){
@@ -662,6 +734,8 @@ function buildPayload(){
 $("#submit").onclick=function(){
   if($('input[name="website"]').value){ return; } // honeypot rempli = bot -> on ignore
   if(!validateStep(4))return;
+  // garde-fou : la description du gâteau (étape 3) doit rester valide
+  if($("#remarques").value.trim().length<20){ cur=3; render(); validateStep(3); return; }
   var btn=this; btn.classList.add("loading"); btn.disabled=true;
   $(".submit-tx",btn).textContent="Envoi…";
   var payload=buildPayload();
