@@ -83,6 +83,13 @@
     width:100%;font-family:inherit;font-size:.95rem;color:var(--ink);background:var(--ground);
     border:1px solid var(--line-2);border-radius:12px;padding:13px 14px;transition:border-color .2s,box-shadow .2s}
   input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 20%,transparent)}
+  /* bouton natif d'ouverture du calendrier : visible et cliquable dans les deux thèmes */
+  input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.85;padding:2px;border-radius:5px}
+  input[type=date]::-webkit-calendar-picker-indicator:hover{opacity:1;background:color-mix(in srgb,var(--gold) 22%,transparent)}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1)}
+  }
+  :root[data-theme="dark"] input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1)}
   textarea{min-height:90px;resize:vertical}
 
   /* Cartes sélectionnables */
@@ -422,6 +429,9 @@ var DESCRIPTIONS = {
   buffet:       { titre:"Décrivez-nous votre envie",
                   ph:"Ex : Plateau de fruits pour 30 personnes — fraises, ananas, raisin, présenté en couronne",
                   aide:"Nombre de personnes, fruits souhaités, présentation" },
+  evenementiel: { titre:"Décrivez votre envie (thème, couleurs, ambiance, nombre de personnes…)",
+                  ph:"Ex : Baby shower fille, thème nuages et étoiles pastel, environ 20 invités, je veux une table décorée avec arche florale…",
+                  aide:"Thème, couleurs, ambiance, nombre de personnes" },
   deco:         { titre:"Texte de personnalisation (prénom, date, petit message…)",
                   ph:"Ex : « Bienvenue bébé Lina — 12 juin », 30 boîtes, couleurs blanc et doré",
                   aide:"Le texte à personnaliser, la quantité, les couleurs" }
@@ -535,14 +545,30 @@ function buildStep3(){
   }
   if(state.type==="evenementiel"){
     h+='<div class="cond"><h4>Votre projet de décoration</h4>'+
-       '<div class="field"><label class="lbl" for="evenementTxt">Décrivez votre envie <span class="opt">(thème, couleurs, ambiance, nombre de personnes…)</span></label>'+
-       '<textarea id="evenementTxt" rows="5" placeholder="Ex : Baby shower fille, thème nuages et étoiles pastel, environ 20 invités, je veux une table décorée avec arche florale…"></textarea></div>'+
        '<div class="field"><label class="lbl" for="adresseEvenement">Adresse de l\'événement</label>'+
        '<input type="text" id="adresseEvenement" placeholder="Ex : 12 rue des Lilas, 93700 Drancy"></div>'+
        '</div>';
   }
   if(!h){ h='<p class="hint" style="margin-bottom:0">Rien à personnaliser ici — passez à la suite 🙂</p>'; }
+  // sortir le champ de description du conteneur AVANT de le vider (sinon il serait détruit)
+  (function(){
+    var rem=$('.field[data-req="remarques"]'), host=$("#condHost");
+    if(rem && host && host.contains(rem)) host.parentNode.insertBefore(rem, host.nextSibling);
+  })();
   $("#condHost").innerHTML=h;
+
+  // placer le champ de description la ou se trouvait l'ancien champ selon le cas
+  (function(){
+    var rem=$('.field[data-req="remarques"]'), host=$("#condHost");
+    if(!rem||!host) return;
+    var addr=$("#adresseEvenement");
+    if(state.type==="evenementiel" && addr){
+      var champAdresse=addr.closest(".field");
+      champAdresse.parentNode.insertBefore(rem, champAdresse);   // juste avant l'adresse
+    }else if(host.nextSibling!==rem){
+      host.parentNode.insertBefore(rem, host.nextSibling);        // position d'origine
+    }
+  })();
 
   // adapter l'intitulé / l'exemple / l'aide du champ de description à la prestation choisie
   majChampDescription();
@@ -562,7 +588,6 @@ function buildStep3(){
   bindChips("#plateauChips", function(v){ state.plateauTaille=v; }, false);
   bindChips("#drageesChips", function(v){ state.dragees=v; }, false);
   bindChips("#optionGateauChips", function(v){ state.optionGateau=v; }, false);
-  var et=$("#evenementTxt"); if(et) et.oninput=function(){state.evenementTxt=this.value};
   var ae=$("#adresseEvenement"); if(ae) ae.oninput=function(){state.adresseEvenement=this.value};
 }
 function majChampDescription(){
@@ -570,7 +595,9 @@ function majChampDescription(){
   if(!lbl||!ta||!help) return;
   var sel=state.prestations.filter(function(k){ return DESCRIPTIONS[k]; });
   var cfg;
-  if(sel.length===1){
+  if(state.type==="evenementiel"){
+    cfg=DESCRIPTIONS.evenementiel;
+  }else if(sel.length===1){
     cfg=DESCRIPTIONS[sel[0]];
   }else{
     var aides=sel.map(function(k){ return DESCRIPTIONS[k].aide; });
