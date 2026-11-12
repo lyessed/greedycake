@@ -238,6 +238,10 @@
   .wa-float svg{width:28px;height:28px}
   @media (max-width:640px){.wa-float{right:14px;bottom:14px;width:50px;height:50px} body{padding-bottom:78px}}
   @media (prefers-reduced-motion:reduce){.wa-float{transition:none}}
+
+  /* 4 vignettes conseils */
+  @media(min-width:1000px){#derniers-conseils .cards,.listing .cards{grid-template-columns:repeat(4,1fr)}}
+  @media(min-width:821px) and (max-width:999px){#derniers-conseils .cards,.listing .cards{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -294,6 +298,14 @@
 <section class="listing">
   <div class="wrap">
     <div class="cards">
+      <a class="card presta-card" href="/blog/combien-de-parts-gateau.html">
+        <div class="ph"><img src="images/realisations/layer-cake-arc-en-ciel-pastel.jpg" width="1254" height="1254" alt="Layer cake d'anniversaire à étages – Greedy Cake, Drancy (93)" loading="lazy"></div>
+        <div class="body"><h3>Combien de parts prévoir pour un gâteau d'anniversaire ?</h3><p>Une part par invité, plus une petite marge : la méthode simple pour choisir la bonne taille.</p></div>
+      </a>
+      <a class="card presta-card" href="/blog/conserver-transporter-gateau.html">
+        <div class="ph"><img src="images/number-cake-fruits-rouges.jpg" width="1086" height="1448" alt="Number cake aux fruits rouges, à conserver au frais – Greedy Cake, Drancy" loading="lazy"></div>
+        <div class="body"><h3>Comment conserver et transporter votre gâteau ?</h3><p>Frigo, température, voiture : nos conseils pour qu'il arrive parfait le jour J.</p></div>
+      </a>
       <a class="card presta-card" href="/blog/gateau-halal-sans-alcool.html">
         <div class="ph"><img src="images/realisations/gateau-anniversaire-football.jpg" width="1145" height="1374" alt="Gâteau d'anniversaire thème football personnalisé – Greedy Cake, Drancy" loading="lazy"></div>
         <div class="body"><h3>Gâteau halal et sans alcool : ce que nous garantissons</h3><p>Où se cachent l'alcool et la gélatine, et ce que nous faisons pour vous garantir des créations sereines.</p></div>
