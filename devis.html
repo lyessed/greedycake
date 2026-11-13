@@ -24,6 +24,7 @@
 <meta name="twitter:description" content="Demandez votre devis gratuit pour un gâteau personnalisé, un bouquet de cupcakes ou une décoration d'événement à Drancy et en Île-de-France. Réponse rapide.">
 <meta name="twitter:image" content="https://www.greedycakeevents.fr/images/og-cover.jpg">
 
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=gcTurnstileLoaded" async defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Dancing+Script:wght@600;700&family=Jost:wght@300;400;500;600&display=swap">
@@ -136,6 +137,8 @@
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
   .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden}
+  .ts-wrap{margin:20px 0 0;min-height:0}
+  .send-msg{margin-top:12px;color:var(--err);font-size:.9rem;text-align:center}
 
   .nav{display:flex;justify-content:space-between;gap:12px;margin-top:28px}
   .btn{font-family:inherit;font-weight:500;font-size:.92rem;letter-spacing:.02em;padding:14px 26px;border-radius:99px;cursor:pointer;border:1px solid transparent;transition:transform .15s,background .2s,box-shadow .2s;display:inline-flex;align-items:center;gap:.5em}
@@ -377,6 +380,8 @@
           <span>J'accepte que mes données soient utilisées pour traiter ma demande, conformément à la <a href="confidentialite.html" target="_blank" rel="noopener">politique de confidentialité</a>.</span></label>
         <div class="err-msg">Merci de cocher cette case pour continuer.</div>
       </div>
+      <div class="ts-wrap" id="ts-box"></div>
+      <div class="send-msg" id="send-msg" role="alert" aria-live="polite" hidden></div>
     </div>
 
     <div class="nav" id="nav">
@@ -719,6 +724,7 @@ function render(){
   $("#prev").style.visibility = cur===1 ? "hidden":"visible";
   $("#next").style.display = cur<TOTAL ? "inline-flex":"none";
   $("#submit").style.display = cur===TOTAL ? "inline-flex":"none";
+  if(cur===TOTAL && tsWidget===null) tsRender();
   window.scrollTo({top:0,behavior:"smooth"});
 }
 $("#next").onclick=function(){
@@ -733,6 +739,33 @@ $("#prev").onclick=function(){
     cur--; render();
   }
 };
+
+/* ---------- Cloudflare Turnstile ---------- */
+var TS_SITEKEY = "0x4AAAAAAF_2x2BBt5uThB5V";
+var tsToken = "", tsWidget = null, tsLoaded = false;
+function tsTheme(){
+  var a = document.documentElement.getAttribute("data-theme");
+  if(a==="dark"||a==="light") return a;
+  return (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+}
+function showMsg(t){ var m=$("#send-msg"); if(!m)return; if(t){ m.textContent=t; m.hidden=false; } else { m.hidden=true; m.textContent=""; } }
+function tsRender(){
+  if(!tsLoaded || !window.turnstile || !$("#ts-box")) return;
+  if(tsWidget!==null){ try{ turnstile.remove(tsWidget); }catch(e){} tsWidget=null; }
+  tsToken = "";
+  tsWidget = turnstile.render("#ts-box",{
+    sitekey:TS_SITEKEY, theme:tsTheme(), size:"flexible", language:"fr", appearance:"always",
+    "refresh-expired":"auto", retry:"auto",
+    callback:function(t){ tsToken=t; showMsg(""); },
+    "expired-callback":function(){ tsToken=""; },
+    "timeout-callback":function(){ tsToken=""; },
+    "error-callback":function(){ tsToken=""; return true; }
+  });
+}
+function tsReset(){ tsToken=""; if(tsWidget!==null && window.turnstile){ try{ turnstile.reset(tsWidget); }catch(e){} } }
+window.gcTurnstileLoaded = function(){ tsLoaded=true; if(cur===TOTAL) tsRender(); };
+/* le widget s'affiche à l'étape 4 ; s'il change de thème (clair/sombre), on le redessine */
+new MutationObserver(function(){ if(tsWidget!==null) tsRender(); }).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 
 /* ---------- Payload + envoi ---------- */
 function buildPayload(){
@@ -751,14 +784,17 @@ function buildPayload(){
     inspiration:{ fichier:state.file||null },
     contact:{ prenom:$("#prenom").value.trim(), nom:$("#nom").value.trim(),
       telephone:$("#tel").value.trim(), email:$("#email").value.trim(), remarques:$("#remarques").value.trim()||null },
-    consentement_rgpd:$("#consent").checked
+    consentement_rgpd:$("#consent").checked,
+    website:$('input[name="website"]').value,
+    turnstile_token:tsToken
   };
 }
 $("#submit").onclick=function(){
-  if($('input[name="website"]').value){ return; } // honeypot rempli = bot -> on ignore
   if(!validateStep(4))return;
   // garde-fou : la description du gâteau (étape 3) doit rester valide
   if($("#remarques").value.trim().length<20){ cur=3; render(); validateStep(3); return; }
+  if(!tsToken){ showMsg("Merci de patienter, vérification en cours…"); return; }
+  showMsg("");
   var btn=this; btn.classList.add("loading"); btn.disabled=true;
   $(".submit-tx",btn).textContent="Envoi…";
   var payload=buildPayload();
@@ -767,12 +803,15 @@ $("#submit").onclick=function(){
   function done(){ $("#form").style.display="none"; $("#prog").style.display="none";
     $("#steplabel").style.display="none"; $("#success").classList.add("show");
     window.scrollTo({top:0,behavior:"smooth"}); }
-  function fail(){ btn.classList.remove("loading"); btn.disabled=false;
-    $(".submit-tx",btn).textContent="Réessayer l'envoi"; alert("Oups, l'envoi a échoué. Réessayez ou contactez-nous directement."); }
+  function fail(status){ btn.classList.remove("loading"); btn.disabled=false;
+    $(".submit-tx",btn).textContent="Réessayer l'envoi"; tsReset();
+    if(status===400){ showMsg("Certaines informations ne sont pas valides"); }
+    else if(status===429){ showMsg("Trop de demandes, réessayez dans une heure"); }
+    else { alert("Oups, l'envoi a échoué. Réessayez ou contactez-nous directement."); } }
 
   if(!WEBHOOK_URL){ setTimeout(done,1100); return; } // mode démo
   fetch(WEBHOOK_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
-    .then(function(r){ if(!r.ok)throw 0; done(); }).catch(fail);
+    .then(function(r){ if(r.ok){ done(); } else { fail(r.status); } }, function(){ fail(0); });
 };
 
 render();
