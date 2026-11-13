@@ -40,7 +40,24 @@
     '.avis--compact .avis-list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;margin:0;padding:2px 0 12px}',
     '.avis--compact .avis-card{flex:0 0 82%;scroll-snap-align:center}',
     '.avis--compact .avis-head h2{font-size:clamp(1.5rem,4vw,1.9rem)}',
-    '@media(prefers-reduced-motion:reduce){.avis-btn{transition:none}}'
+    '@media(prefers-reduced-motion:reduce){.avis-btn{transition:none}}',
+    /* ===== Bandeau défilant, ordinateur uniquement (>= 900 px) ===== */
+    '@media(min-width:900px){',
+    '.avis-marquee{overflow:hidden;overflow:clip;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 7%,#000 93%,transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 7%,#000 93%,transparent 100%)}',
+    '.avis .avis-list,.avis--compact .avis-list{display:flex;flex-wrap:nowrap;width:max-content;gap:0;margin:0;padding:2px 0 12px;overflow:visible;scroll-snap-type:none;animation:avis-defile 50s linear infinite;will-change:transform}',
+    '.avis .avis-card,.avis--compact .avis-card{flex:0 0 360px;width:360px;margin-right:18px;scroll-snap-align:none}',
+    '.avis .avis-card blockquote,.avis--compact .avis-card blockquote{white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:6;line-clamp:6;overflow:hidden}',
+    '.avis .avis-card footer{margin-top:auto}',
+    '.avis-card:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}',
+    '.avis-marquee:hover .avis-list,.avis-marquee:focus-within .avis-list{animation-play-state:paused}',
+    '@keyframes avis-defile{from{transform:translateX(0)}to{transform:translateX(-50%)}}',
+    '}',
+    /* mouvement réduit : pas d'animation, la ligne se fait défiler à la main, pas de doublons */
+    '@media(min-width:900px) and (prefers-reduced-motion:reduce){',
+    '.avis-marquee{overflow-x:auto;-webkit-mask-image:none;mask-image:none}',
+    '.avis .avis-list,.avis--compact .avis-list{animation:none;will-change:auto;width:max-content}',
+    '.avis-card--dup{display:none}',
+    '}'
   ].join('');
 
   function fail() { /* la section reste cachée */ }
@@ -116,6 +133,43 @@
     style.textContent = CSS;
     document.head.appendChild(style);
     section.hidden = false;
+    setupMarquee(list);
+  }
+
+  /* Bandeau (>= 900 px) : cartes dupliquées pour une boucle sans saut (-50 % = un tour),
+     doublons cachés aux lecteurs d'écran ; cartes d'origine focusables au clavier (pause).
+     Sous 900 px : aucun doublon, rendu inchangé. */
+  function setupMarquee(list) {
+    var mq = window.matchMedia ? window.matchMedia('(min-width: 900px)') : null;
+    if (!mq) return;
+    var box = document.createElement('div');
+    box.className = 'avis-marquee';
+    list.parentNode.insertBefore(box, list);
+    box.appendChild(list);
+    function sync() {
+      var originals = list.querySelectorAll('.avis-card:not(.avis-card--dup)');
+      var dups = list.querySelectorAll('.avis-card--dup');
+      var k;
+      if (mq.matches) {
+        if (!dups.length) {
+          for (k = 0; k < originals.length; k++) {
+            var c = originals[k].cloneNode(true);
+            c.className += ' avis-card--dup';
+            c.setAttribute('aria-hidden', 'true');
+            c.removeAttribute('tabindex');
+            list.appendChild(c);
+          }
+        }
+        for (k = 0; k < originals.length; k++) originals[k].setAttribute('tabindex', '0');
+      } else {
+        for (k = 0; k < dups.length; k++) list.removeChild(dups[k]);
+        for (k = 0; k < originals.length; k++) originals[k].removeAttribute('tabindex');
+      }
+    }
+    sync();
+    if (mq.addEventListener) mq.addEventListener('change', sync);
+    else if (mq.addListener) mq.addListener(sync);
+    window.addEventListener('resize', sync);
   }
 
   function load() {
