@@ -748,21 +748,36 @@ function tsTheme(){
   if(a==="dark"||a==="light") return a;
   return (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
 }
-function showMsg(t){ var m=$("#send-msg"); if(!m)return; if(t){ m.textContent=t; m.hidden=false; } else { m.hidden=true; m.textContent=""; } }
+var msgKind = "";
+var WA_URL = "https://wa.me/33759954545?text=Bonjour%2C%20j%E2%80%99ai%20une%20question%20sur%20une%20commande%20%F0%9F%8E%82";
+function showMsg(t, kind){ var m=$("#send-msg"); if(!m)return; msgKind = t ? (kind||"") : "";
+  if(t){ m.textContent=t; m.hidden=false; } else { m.hidden=true; m.textContent=""; } }
+/* efface seulement les messages d'attente / d'échec du widget (jamais une erreur d'envoi) */
+function clearTsMsg(){ if(msgKind==="wait"||msgKind==="tsfail") showMsg(""); }
+/* le widget n'a pas pu se charger : message + lien WhatsApp (construit sans innerHTML) ; l'envoi reste bloqué */
+function showTsFail(){ var m=$("#send-msg"); if(!m)return; m.textContent="";
+  m.appendChild(document.createTextNode("La vérification anti-robot n’a pas pu se charger. Désactivez votre bloqueur de publicité et rechargez la page, ou écrivez-nous directement sur "));
+  var a=document.createElement("a"); a.href=WA_URL; a.target="_blank"; a.rel="noopener"; a.textContent="WhatsApp 💬"; a.style.textDecoration="underline"; a.style.color="inherit";
+  m.appendChild(a); m.hidden=false; msgKind="tsfail"; }
+var tsFailed = false, tsTimer = null;
+function tsDisarm(){ if(tsTimer){ clearTimeout(tsTimer); tsTimer=null; } }
+/* aucun jeton au bout de 10 s (et pas de défi visible à l'écran) = échec de chargement */
+function tsArm(){ tsDisarm(); tsTimer=setTimeout(function(){ tsTimer=null; if(!tsToken){ tsFailed=true; showTsFail(); } },10000); }
 function tsRender(){
   if(!tsLoaded || !window.turnstile || !$("#ts-box")) return;
   if(tsWidget!==null){ try{ turnstile.remove(tsWidget); }catch(e){} tsWidget=null; }
-  tsToken = "";
+  tsToken = ""; tsFailed = false; tsArm();
   tsWidget = turnstile.render("#ts-box",{
     sitekey:TS_SITEKEY, theme:tsTheme(), size:"flexible", language:"fr", appearance:"always",
     "refresh-expired":"auto", retry:"auto",
-    callback:function(t){ tsToken=t; showMsg(""); },
+    callback:function(t){ tsToken=t; tsFailed=false; tsDisarm(); clearTsMsg(); },
+    "before-interactive-callback":function(){ tsDisarm(); }, /* défi visible : le widget est chargé, le visiteur est en train de le résoudre */
     "expired-callback":function(){ tsToken=""; },
     "timeout-callback":function(){ tsToken=""; },
-    "error-callback":function(){ tsToken=""; return true; }
+    "error-callback":function(){ tsToken=""; tsDisarm(); tsFailed=true; showTsFail(); return true; }
   });
 }
-function tsReset(){ tsToken=""; if(tsWidget!==null && window.turnstile){ try{ turnstile.reset(tsWidget); }catch(e){} } }
+function tsReset(){ tsToken=""; tsFailed=false; if(tsWidget!==null && window.turnstile){ try{ turnstile.reset(tsWidget); tsArm(); }catch(e){} } }
 window.gcTurnstileLoaded = function(){ tsLoaded=true; if(cur===TOTAL) tsRender(); };
 /* le widget s'affiche à l'étape 4 ; s'il change de thème (clair/sombre), on le redessine */
 new MutationObserver(function(){ if(tsWidget!==null) tsRender(); }).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
@@ -793,7 +808,7 @@ $("#submit").onclick=function(){
   if(!validateStep(4))return;
   // garde-fou : la description du gâteau (étape 3) doit rester valide
   if($("#remarques").value.trim().length<20){ cur=3; render(); validateStep(3); return; }
-  if(!tsToken){ showMsg("Merci de patienter, vérification en cours…"); return; }
+  if(!tsToken){ if(tsFailed){ showTsFail(); } else { showMsg("Merci de patienter, vérification en cours…","wait"); } return; }
   showMsg("");
   var btn=this; btn.classList.add("loading"); btn.disabled=true;
   $(".submit-tx",btn).textContent="Envoi…";
@@ -803,15 +818,24 @@ $("#submit").onclick=function(){
   function done(){ $("#form").style.display="none"; $("#prog").style.display="none";
     $("#steplabel").style.display="none"; $("#success").classList.add("show");
     window.scrollTo({top:0,behavior:"smooth"}); }
-  function fail(status){ btn.classList.remove("loading"); btn.disabled=false;
+  function fail(status, detail){ btn.classList.remove("loading"); btn.disabled=false;
     $(".submit-tx",btn).textContent="Réessayer l'envoi"; tsReset();
-    if(status===400){ showMsg("Certaines informations ne sont pas valides"); }
-    else if(status===429){ showMsg("Trop de demandes, réessayez dans une heure"); }
+    if(status===400){ showMsg(detail || "Certaines informations ne sont pas valides","senderr"); }
+    else if(status===429){ showMsg("Trop de demandes, réessayez dans une heure","senderr"); }
+    else if(status===403){ showMsg("La vérification a échoué, merci de réessayer","senderr"); }
     else { alert("Oups, l'envoi a échoué. Réessayez ou contactez-nous directement."); } }
 
   if(!WEBHOOK_URL){ setTimeout(done,1100); return; } // mode démo
   fetch(WEBHOOK_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
-    .then(function(r){ if(r.ok){ done(); } else { fail(r.status); } }, function(){ fail(0); });
+    .then(function(r){
+      if(r.ok){ done(); }
+      else if(r.status===400){
+        /* détail renvoyé par le serveur (affiché en texte brut), sinon texte fixe */
+        r.json().then(function(j){ var m = j && typeof j.message==="string" ? j.message.trim().slice(0,300) : ""; fail(400, m); },
+                      function(){ fail(400, ""); });
+      }
+      else { fail(r.status); }
+    }, function(){ fail(0); });
 };
 
 render();
