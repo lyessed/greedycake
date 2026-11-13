@@ -35,7 +35,8 @@
     '.avis-list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding:2px 2px 12px;margin:0 -16px;padding-left:16px;padding-right:16px;-webkit-overflow-scrolling:touch}',
     '.avis-card{flex:0 0 84%;scroll-snap-align:center}',
     '}',
-    '.avis--compact{padding:8px 0 26px}',
+    '.avis--compact{padding:40px 0 22px}',
+    '.avis-line{margin:-4px auto 22px;text-align:center;font-size:.86rem;letter-spacing:.02em;color:var(--ink-soft)}',
     '.avis--compact .avis-in{padding:0;max-width:none}',
     '.avis--compact .avis-list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;margin:0;padding:2px 0 12px}',
     '.avis--compact .avis-card{flex:0 0 82%;scroll-snap-align:center}',
@@ -133,6 +134,13 @@
     style.textContent = CSS;
     document.head.appendChild(style);
     section.hidden = false;
+    /* devis : ligne discrète au-dessus du formulaire, alimentée par le même appel */
+    var line = document.getElementById('avis-line');
+    if (line && note > 0 && note <= 5 && nb > 0) {
+      line.textContent = '⭐ ' + note.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) +
+        ' · ' + nb.toLocaleString('fr-FR') + ' avis Google';
+      line.hidden = false;
+    }
     setupMarquee(list);
   }
 

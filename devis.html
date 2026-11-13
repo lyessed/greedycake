@@ -138,6 +138,7 @@
 
   .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0;overflow:hidden}
   .ts-wrap{margin:20px 0 0;min-height:0}
+  #prog{scroll-margin-top:96px}
   .send-msg{margin-top:12px;color:var(--err);font-size:.9rem;text-align:center}
 
   .nav{display:flex;justify-content:space-between;gap:12px;margin-top:28px}
@@ -261,17 +262,7 @@
     <p>Gâteau d'anniversaire, layer cake, number cake, bouquet de cupcakes ou décoration complète de votre baby shower : décrivez-nous votre projet en quelques minutes. Nous vous répondons rapidement avec une proposition personnalisée et une photo de ce que nous allons réaliser. Toutes nos créations sont faites à la main à Drancy, sans alcool et avec une gélatine halal. Pensez à commander au moins une semaine avant votre événement. Livraison partout en Île-de-France, retrait possible à Drancy.</p>
   </div>
 
-<section class="avis avis--compact" id="avis" aria-labelledby="avis-titre" hidden>
-  <div class="avis-in">
-    <div class="avis-head"><h2 id="avis-titre">Ils nous ont fait confiance ⭐</h2><p class="avis-sub" id="avis-sub"></p></div>
-    <ul class="avis-list" id="avis-list"></ul>
-    <div class="avis-actions">
-      <a class="avis-btn avis-btn--main" href="https://g.page/r/Cesc6ubsuBHfEBM" target="_blank" rel="noopener">Voir tous nos avis sur Google</a>
-      <a class="avis-btn" href="https://g.page/r/Cesc6ubsuBHfEBM/review" target="_blank" rel="noopener">Laisser un avis</a>
-    </div>
-    <p class="avis-note">Avis publiés sur Google</p>
-  </div>
-</section>
+  <p class="avis-line" id="avis-line" hidden></p>
 
   <div class="prog" id="prog">
     <div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div><div class="seg"><i></i></div>
@@ -399,6 +390,18 @@
     <p class="wa-q">Une question en attendant ? 💬 <a href="https://wa.me/33759954545?text=Bonjour%2C%20j%E2%80%99ai%20une%20question%20sur%20une%20commande%20%F0%9F%8E%82" target="_blank" rel="noopener">Écrivez-moi sur WhatsApp</a></p>
     <div class="sig">Greedy Cake &amp; Events</div>
   </div>
+
+  <section class="avis avis--compact" id="avis" aria-labelledby="avis-titre" hidden>
+    <div class="avis-in">
+      <div class="avis-head"><h2 id="avis-titre">Ils nous ont fait confiance ⭐</h2><p class="avis-sub" id="avis-sub"></p></div>
+      <ul class="avis-list" id="avis-list"></ul>
+      <div class="avis-actions">
+        <a class="avis-btn avis-btn--main" href="https://g.page/r/Cesc6ubsuBHfEBM" target="_blank" rel="noopener">Voir tous nos avis sur Google</a>
+        <a class="avis-btn" href="https://g.page/r/Cesc6ubsuBHfEBM/review" target="_blank" rel="noopener">Laisser un avis</a>
+      </div>
+      <p class="avis-note">Avis publiés sur Google</p>
+    </div>
+  </section>
 
   <div class="footnote"><a href="index.html">&larr; Retour à l'accueil</a> · Devis gratuit &amp; sans engagement · Drancy (93) · <a href="https://www.instagram.com/greedy.cake_events/" target="_blank" rel="noopener">Instagram</a> · <a href="https://wa.me/33759954545?text=Bonjour%2C%20j%E2%80%99ai%20une%20question%20sur%20une%20commande%20%F0%9F%8E%82" target="_blank" rel="noopener">WhatsApp</a></div>
 </div>
@@ -698,6 +701,7 @@ var _rq=$("#remarques");
 if(_rq) _rq.addEventListener("input",function(){ if(this.value.trim().length>=20) clearErr(this.closest(".field")); });
 
 /* ---------- Navigation ---------- */
+var stepScrolled=false;
 function render(){
   $$(".step").forEach(function(s){s.classList.toggle("active", +s.dataset.step===cur)});
   var isEv = state.type==="evenementiel";
@@ -725,7 +729,8 @@ function render(){
   $("#next").style.display = cur<TOTAL ? "inline-flex":"none";
   $("#submit").style.display = cur===TOTAL ? "inline-flex":"none";
   if(cur===TOTAL && tsWidget===null) tsRender();
-  window.scrollTo({top:0,behavior:"smooth"});
+  /* au changement d'étape : on revient au début du formulaire (pas tout en haut de la page) ; pas au chargement */
+  if(!stepScrolled){ stepScrolled=true; } else { var anchor=$("#prog"); if(anchor){ anchor.scrollIntoView({behavior:"smooth",block:"start"}); } }
 }
 $("#next").onclick=function(){
   if(!validateStep(cur))return;
